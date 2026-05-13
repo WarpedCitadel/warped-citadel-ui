@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: rgba(15, 15, 15, 0.95);
+  border-bottom: 1px solid var(--teal-dim);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.teal-text {
+  color: var(--teal-glow);
+  text-shadow: 0 0 10px var(--teal-dim);
+}

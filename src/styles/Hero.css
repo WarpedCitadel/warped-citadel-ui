@@ -1,0 +1,30 @@
+.hero {
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding: 0 5%;
+  transition: background-image 0.8s ease-in-out;
+  margin-bottom: 40px;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.trending-badge {
+  color: var(--teal-glow);
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin: 10px 0;
+}
+
+.hero p {
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
