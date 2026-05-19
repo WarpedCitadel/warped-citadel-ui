@@ -1,15 +1,18 @@
+import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
 import Button from './UI/Button';
 
-const Navbar = ({ onNavigate }) => {
+const Navbar = () => {
   return (
     <nav className="navbar">
-      <div className="nav-logo" onClick={() => onNavigate('home')}>
+      <Link to="/" className="nav-logo">
         <span className="teal-text">WARPED</span>CITADEL
-      </div>
+      </Link>
 
-      <div className="nav-links">
-        <Button onClick={() => onNavigate('login')}>Login</Button>
+      <div className="nav-links">        
+        <Link to="/login">
+          <Button>Login</Button>
+        </Link>
       </div>
     </nav>
   );

@@ -1,6 +1,7 @@
 import Panel from '../components/UI/Panel';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
+import { Link } from 'react-router-dom';
 import '../styles/Login.css';
 
 const Login = ({ setPage }) => {
@@ -21,7 +22,7 @@ const Login = ({ setPage }) => {
               <Button variant="primary">Login</Button>
             </div>
             <div className="form-footer">
-              <p>New to the citadel? <span onClick={() => setPage('signup')} className="teal-link">Create account</span></p>
+              <p>New to the citadel? <Link to="/signup" className="teal-link">Create an account</Link></p>
             </div>
 
           </form>

@@ -15,6 +15,9 @@
   font-weight: 800;
   letter-spacing: 2px;
   cursor: pointer;
+  user-select: none;
+  text-decoration: none; 
+  color: var(--text-main);
 }
 
 .teal-text {
