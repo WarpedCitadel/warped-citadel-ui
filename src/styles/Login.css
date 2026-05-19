@@ -1,0 +1,42 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-center-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-actions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.teal-link {
+  color: var(--teal-glow);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.teal-link:hover {
+  text-shadow: 0 0 8px var(--teal-glow);
+}
