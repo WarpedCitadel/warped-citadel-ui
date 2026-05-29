@@ -1,8 +1,9 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
 import Button from './UI/Button';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   return (
     <nav className="navbar">
       <Link to="/" className="nav-logo">
