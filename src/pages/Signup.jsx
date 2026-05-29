@@ -15,7 +15,7 @@ const Signup = () => {
       <div className="signup-center-wrapper">
         <Panel title="Join the Citadel">
           <form className="signup-form" onSubmit={handleSignup}>
-            <Input label="Username" placeholder="Choose a display name" />
+            <Input label="Username" placeholder="Choose a username" />
             <Input label="Email" type="email" placeholder="your@email.com" />
             <Input label="Password" type="password" placeholder="••••••••" />
             
