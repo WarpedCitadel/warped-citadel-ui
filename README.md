@@ -1,4 +1,60 @@
-# React + TypeScript + Vite
+# Warped-citadel-ui
+This project contains source code and supporting files that you can deploy with the Ubuntu Linux Shell.
+
+## Deploy the application
+The warped-citadel-ui application uses Docker to deploy and run the applications Linux environment.
+
+### Use Docker to build and test locally
+Build the application image with the `docker build` command.
+```bashrc
+docker build -t warped-citadel-ui/local .
+```
+Docker uses the applications `dockerfile` to build the multi-stage image.
+The image uses `node:24-alpine` to build the application then `npm run build` to trigger `TypeScript` to output a `/dist` folder.
+
+Then `nginx:1.30.2-alpine` is used to run the application referencing the compiled `JavaScript` inside the `/app/dist` folder from the builder stage.
+
+Build the docker container using `docker-compose up`
+```bashrc
+docker-compose up
+```
+Referencing the `docker-compose.yml`, Docker creates a container called `wc_local` with the defined image `warped-citadel-ui/local` and port on `5173`
+```yml
+services:
+  wc_local:
+    image: warped-citadel-ui/local
+    ports:
+      - "5173:5173"
+```
+
+Since the application relies on a React + Vite build, the `vite.config.ts` needs to be configured to listen on IPs `0.0.0.0` and the port `5173` to map with `ngninx` which is also modified to listen on port `5173`
+
+### vite.config.ts
+```ts
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+  }
+})
+```
+### nginx.conf
+```js
+server {
+    listen 5173;
+    server_name localhost;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+## React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
