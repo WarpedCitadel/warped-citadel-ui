@@ -3,7 +3,6 @@ import Panel from '../components/UI/Panel';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { Link } from 'react-router-dom';
-import { validateUsername } from '../utils/validation';
 import '../styles/Login.css';
 
 const Login: React.FC = () => {
