@@ -9,7 +9,7 @@ readme deploy_local: localappip    :=$(LOCAL_APP_IP)
 readme deploy_local: localappport  :=$(LOCAL_APP_PORT)
 
 
-.PHONY: readme deploy_local rip_deploy_local rip_local
+.PHONY: readme deploy_local rip_deploy_local rip_local up-daemon
 
 readme:
 	@echo \
@@ -18,17 +18,17 @@ readme:
 To drop and recreate warped-citadel-ui, use one of these targets.\n\
 Ensure you have a .env file to map secrets for warped-citadel-ui and aws config.\n\
 if you dont have an .env file you must make one in the root directory for the S3 connection to work.\n\
+Before using the make commands or docker commands verify if the docker daemon is active\n\
 For more help refer to the documentation in Github. \n\
 \n\
-	rip_deploy_local	Drop and recreate the LOCAL warped-citadel-ui container at $(localappip):$(localappport).\n\
+	rip_deploy_local	Stop the local docker container and rebuild the docker image and container on $(localappip):$(localappport).\n\
 \n\
-	deploy_local		Deploy the LOCAL warped-citadel-ui container.\n\
+	deploy_local		Build the local docker image and build local docker container on $(localappip):$(localappport).\n\
 \n\
-	rip_local		Drop the LOCAL warped-citadel-ui container.\n"
+	rip_local		Stop the local docker container and rebuild the docker image and container on $(localappip):$(localappport).\n"
 
 
 # ------ deploy application ------
-
 deploy_local:
 	@echo Deploying LOCAL warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
 	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi

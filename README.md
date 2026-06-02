@@ -1,24 +1,24 @@
-# Warped-citadel-ui
-This project contains source code and supporting files that you can deploy with the Ubuntu Linux Shell.
+# warped-citadel-ui
+This project contains the source code and supporting files for the applications frontend.
 
 ## Deploy the application
-The warped-citadel-ui application uses Docker to deploy and run the applications Linux environment.
+This project uses Docker to deploy in local, development, and production environments.
 
 ### Use Docker to build and test locally
 Build the application image with the `docker build` command.
 ```bashrc
 docker build -t warped-citadel-ui/local .
 ```
-Docker uses the applications `dockerfile` to build the multi-stage image.
-The image uses `node:24-alpine` to build the application then `npm run build` to trigger `TypeScript` to output a `/dist` folder.
+Docker uses the projects `dockerfile` to build a multi-staged docker image.
+The image builder, uses `node:24-alpine` to build the project, then executes `npm run build` to trigger the `TypeScript` source code to output a `/dist` folder inside a newly created folder called `/app`.
 
-Then `nginx:1.30.2-alpine` is used to run the application referencing the compiled `JavaScript` inside the `/app/dist` folder from the builder stage.
+The image runner, uses `nginx:1.30.2-alpine` to run the projects newly compiled `JavaScript` from `TypeScript` located inside the `/app/dist` folder from the builder stage.
 
-Build the docker container using `docker-compose up`
+Build the docker container using `docker-compose up`.
 ```bashrc
 docker-compose up
 ```
-Referencing the `docker-compose.yml`, Docker creates a container called `wc_local` with the defined image `warped-citadel-ui/local` and port on `5173`
+Referencing the `docker-compose.yml`, Docker creates a container called `wc_local` with the defined image `warped-citadel-ui/local` and port on `5173`.
 ```yml
 services:
   wc_local:
@@ -27,7 +27,7 @@ services:
       - "5173:5173"
 ```
 
-Since the application relies on a React + Vite build, the `vite.config.ts` needs to be configured to listen on IPs `0.0.0.0` and the port `5173` to map with `ngninx` which is also modified to listen on port `5173`
+Since the application relies on a *React + TypeScript + Vite* build, the `vite.config.ts` needs to be configured to listen on IPs `0.0.0.0` and the port `5173` to map with `ngninx` which is also modified to listen on port `5173`.
 
 ### vite.config.ts
 ```ts
@@ -52,6 +52,34 @@ server {
         try_files $uri $uri/ /index.html;
     }
 }
+```
+## Using Make for Docker deployments
+To use `make` you must install the build automation tool in a Linux terminal with the following command.
+```bashrc
+sudo apt install make
+```
+Once `make` is installed, navigate to the root directory of the project via `/warped-citadel-ui` where the `Makefile` is located and enter `make readme` as a command.
+```bashrc
+make readme
+```
+The `make` target *readme* will display inside the terminal a list of make commands for deployment.
+
+### make deploy_local
+Build the local docker image and build local docker container on localhost:5173.
+```bashrc
+make deploy_local
+```
+
+### make rip_deploy_local
+Stop the local docker container and rebuild the docker image and container on localhost:5173.
+```bashrc
+make rip_deploy_local
+```
+
+### make rip_local
+Stop and delete the local docker container. Then delete the local docker image on localhost:5173.
+```bashrc
+make rip_local
 ```
 
 ## React + TypeScript + Vite
