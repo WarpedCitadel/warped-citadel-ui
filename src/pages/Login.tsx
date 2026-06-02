@@ -1,15 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Panel from '../components/UI/Panel';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { Link } from 'react-router-dom';
+import { validateUsername } from '../utils/validation';
 import '../styles/Login.css';
 
 const Login: React.FC = () => {
-  // Typing the event 'e' as a FormEvent specifically from an HTML Form
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({ username: '', password: '' });
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Login logic goes here...");
+    
+    // Basic check: Are fields empty?
+    const userValid = formData.username.length > 0;
+    const passValid = formData.password.length > 0;
+
+    setErrors({
+      username: userValid ? "" : "Username is required",
+      password: passValid ? "" : "Password is required"
+    });
+
+    if (userValid && passValid) {
+       console.log("Attempting Login...");
+    }
   };
 
   return (
@@ -20,11 +35,17 @@ const Login: React.FC = () => {
             <Input 
               label="Username" 
               placeholder="Enter your username" 
+              value={formData.username}
+              error={errors.username}
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             />
             <Input 
               label="Password" 
               type="password" 
               placeholder="••••••••" 
+              value={formData.password}
+              error={errors.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
             
             <div className="form-actions">

@@ -26,3 +26,20 @@
   border-color: var(--teal-glow);
   box-shadow: 0 0 8px rgba(0, 242, 255, 0.4);
 }
+
+.input-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-error-text {
+  color: #ff4d4d;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.custom-input.input-error {
+  border-color: #ff4d4d;
+  box-shadow: 0 0 8px rgba(255, 77, 77, 0.2);
+}
