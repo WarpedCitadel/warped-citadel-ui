@@ -10,7 +10,7 @@
 .game-card:hover {
   transform: translateY(-5px);
   border-color: var(--teal-glow);
-  box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+  box-shadow: 0 0 15px var(--teal-shadow);
 }
 
 .card-img {

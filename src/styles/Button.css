@@ -13,7 +13,7 @@
   background: transparent;
   color: var(--teal-glow);
   border: 1px solid var(--teal-glow);
-  box-shadow: inset 0 0 5px rgba(0, 242, 255, 0.2), 0 0 5px rgba(0, 242, 255, 0.2);
+  box-shadow: inset 0 0 5px var(--teal-shadow), 0 0 5px var(--teal-shadow);
 }
 
 .primary:hover {
