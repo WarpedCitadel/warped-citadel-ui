@@ -51,6 +51,6 @@ jobs:
           file: ./dockerfile
           push: true
           tags: |
-            ${{secrets.DOCKER_USERNAME}}/warped-citadel-ui:prod
+            ${{ secrets.DOCKERHUB_USERNAME }}/warped-citadel-ui:prod
           cache-from: type=gha
           cache-to: type=gha,mode=max
