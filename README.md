@@ -7,22 +7,25 @@ This project uses Docker to deploy in local, development, and production environ
 ### Use Docker to build and test locally
 Build the application image with the `docker build` command.
 ```bashrc
-docker build -t warped-citadel-ui/local .
+docker build -t warped-citadel-ui:local .
 ```
 Docker uses the projects `dockerfile` to build a multi-staged docker image.
 The image builder, uses `node:24-alpine` to build the project, then executes `npm run build` to trigger the `TypeScript` source code to output a `/dist` folder inside a newly created folder called `/app`.
 
 The image runner, uses `nginx:1.30.2-alpine` to run the projects newly compiled `JavaScript` from `TypeScript` located inside the `/app/dist` folder from the builder stage.
 
-Build the docker container using `docker-compose up`.
+Build the docker container using `docker compose up wc_local --build -d`.
 ```bashrc
-docker-compose up
+docker compose up wc_local --build -d
 ```
-Referencing the `docker-compose.yml`, Docker creates a container called `wc_local` with the defined image `warped-citadel-ui/local` and port on `5173`.
+Referencing the `docker-compose.yml`, Docker creates a container called `wc_local` with the defined image `warped-citadel-ui:local` and port on `5173`.
 ```yml
 services:
   wc_local:
-    image: warped-citadel-ui/local
+    image: warped-citadel-ui:local
+    build:
+      context: ./
+      dockerfile: dockerfile
     ports:
       - "5173:5173"
 ```
