@@ -54,8 +54,8 @@ deploy_dev:
 	@echo Deploying DEV warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
 	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
 	
-	@echo "Building image warpedcitadel/$(IMAGE_NAME):dev..."
-	docker build -t warpedcitadel/$(IMAGE_NAME):dev . .
+	@echo "Pulling image warpedcitadel/$(IMAGE_NAME):dev..."
+	docker pull warpedcitadel/$(IMAGE_NAME):dev
 	
 	@echo "Building container warped-citadel-ui..."
 	docker compose up wc_dev -d
@@ -64,8 +64,8 @@ deploy_prod:
 	@echo Deploying PROD warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
 	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
 	
-	@echo "Building image warpedcitadel/$(IMAGE_NAME):prod..."
-	docker build -t image warpedcitadel/$(IMAGE_NAME):prod .
+	@echo "Pulling image warpedcitadel/$(IMAGE_NAME):prod..."
+	docker pull warpedcitadel/$(IMAGE_NAME):prod
 	
 	@echo "Building container warped-citadel-ui..."
 	docker compose up wc_prod -d
