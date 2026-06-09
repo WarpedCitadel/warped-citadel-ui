@@ -1,5 +1,16 @@
 services:
   wc_local:
-    image: warped-citadel-ui/local
+    image: warped-citadel-ui:local
+    build:
+      context: ./
+      dockerfile: dockerfile
+    ports:
+      - "5173:5173"
+  wc_dev:
+    image: warpedcitadel/warped-citadel-ui:dev
+    ports:
+      - "5173:5173"
+  wc_prod:
+    image: warpedcitadel/warped-citadel-ui:prod
     ports:
       - "5173:5173"

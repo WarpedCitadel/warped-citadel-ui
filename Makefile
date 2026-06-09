@@ -1,15 +1,15 @@
 LOCAL_APP_IP	?=	localhost
 LOCAL_APP_PORT	?=	5173
 
-IMAGE_NAME = warped-citadel-ui/local
-CONTAINER_NAME = warped-citadel-ui-wc_local-1
+IMAGE_NAME = warped-citadel-ui
+CONTAINER_NAME = warped-citadel-ui
 
 
 readme deploy_local: localappip    :=$(LOCAL_APP_IP)
 readme deploy_local: localappport  :=$(LOCAL_APP_PORT)
 
 
-.PHONY: readme deploy_local rip_deploy_local rip_local up-daemon
+.PHONY: readme deploy_local rip_deploy_local rip_local deploy_dev rip_dev deploy_prod rip_prod
 
 readme:
 	@echo \
@@ -19,13 +19,24 @@ To drop and recreate warped-citadel-ui, use one of these targets.\n\
 Ensure you have a .env file to map secrets for warped-citadel-ui and aws config.\n\
 if you dont have an .env file you must make one in the root directory for the S3 connection to work.\n\
 Before using the make commands or docker commands verify if the docker daemon is active\n\
+And for dev, prod, qa deployments require the docker image to be pulled down from dockerhub.\n\
 For more help refer to the documentation in Github. \n\
 \n\
 	rip_deploy_local	Stop the local docker container and rebuild the docker image and container on $(localappip):$(localappport).\n\
 \n\
 	deploy_local		Build the local docker image and build local docker container on $(localappip):$(localappport).\n\
 \n\
-	rip_local		Stop the local docker container and rebuild the docker image and container on $(localappip):$(localappport).\n"
+	rip_local		Stop the local docker container and rebuild the docker image and container on $(localappip):$(localappport).\n\
+\n\
+\n\
+	deploy_dev		Build and deploy the dev docker container on $(localappip):$(localappport).\n\
+\n\
+	rip_dev			Stop the dev docker container on $(localappip):$(localappport).\n\
+\n\
+\n\
+	deploy_prod		Build and deploy the prod docker container on $(localappip):$(localappport).\n\
+\n\
+	rip_prod		Stop the prod docker container on $(localappip):$(localappport).\n"
 
 
 # ------ deploy application ------
@@ -33,12 +44,66 @@ deploy_local:
 	@echo Deploying LOCAL warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
 	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
 	
-	@echo "Building image $(IMAGE_NAME)..."
-	docker build -t $(IMAGE_NAME) .
+	@echo "Building image $(IMAGE_NAME):local..."
+	docker build -t $(IMAGE_NAME):local .
 	
 	@echo "Building container warped-citadel-ui..."
-	docker compose up
+	docker compose up wc_local --build -d
 
+deploy_dev:
+	@echo Deploying DEV warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
+	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
+	
+	@echo "Pulling image warpedcitadel/$(IMAGE_NAME):dev..."
+	docker pull warpedcitadel/$(IMAGE_NAME):dev
+	
+	@echo "Building container warped-citadel-ui..."
+	docker compose up wc_dev -d
+
+deploy_prod:
+	@echo Deploying PROD warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
+	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
+	
+	@echo "Pulling image warpedcitadel/$(IMAGE_NAME):prod..."
+	docker pull warpedcitadel/$(IMAGE_NAME):prod
+	
+	@echo "Building container warped-citadel-ui..."
+	docker compose up wc_prod -d
+
+
+# ------ rip application ------
+rip_local:
+	@echo Ripping LOCAL warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
+	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
+	
+	@echo "Stopping and removing container warped-citadel-ui..."
+	-docker stop $(CONTAINER_NAME)-wc_local-1
+	-docker rm $(CONTAINER_NAME)-wc_local-1
+	
+	@echo "Removing image $(IMAGE_NAME):local..."
+	-docker rmi -f $(IMAGE_NAME):local
+
+rip_dev:
+	@echo Ripping DEV warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
+	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
+	
+	@echo "Stopping and removing container warped-citadel-ui..."
+	-docker stop $(CONTAINER_NAME)-wc_dev-1
+	-docker rm $(CONTAINER_NAME)-wc_dev-1
+	
+	@echo "Removing image warpedcitadel/$(IMAGE_NAME):dev..."
+	-docker rmi -f warpedcitadel/$(IMAGE_NAME):dev
+
+rip_prod:
+	@echo Ripping PROD warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
+	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
+	
+	@echo "Stopping and removing container warped-citadel-ui..."
+	-docker stop $(CONTAINER_NAME)-wc_prod-1
+	-docker rm $(CONTAINER_NAME)-wc_prod-1
+	
+	@echo "Removing image warpedcitadel/$(IMAGE_NAME):prod..."
+	-docker rmi -f warpedcitadel/$(IMAGE_NAME):prod
 
 
 # ------ rip and deploy application ------
@@ -49,22 +114,8 @@ rip_deploy_local:
 	@echo "Stopping $(CONTAINER_NAME)..."
 	docker compose down
 	
-	@echo "Building image $(IMAGE_NAME)..."
-	docker build -t $(IMAGE_NAME) .
+	@echo "Building image $(IMAGE_NAME):local..."
+	docker build -t $(IMAGE_NAME):local .
 	
 	@echo "Building container warped-citadel-ui..."
-	docker compose up
-
-
-
-# ------ rip application ------
-rip_local:
-	@echo Ripping LOCAL warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
-	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
-	
-	@echo "Stopping and removing container warped-citadel-ui..."
-	-docker stop $(CONTAINER_NAME)
-	-docker rm $(CONTAINER_NAME)
-	
-	@echo "Removing image $(IMAGE_NAME)..."
-	-docker rmi -f $(IMAGE_NAME)
+	docker compose up wc_local --build -d
