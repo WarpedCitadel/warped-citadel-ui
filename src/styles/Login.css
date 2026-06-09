@@ -43,3 +43,23 @@
 .teal-link:hover {
   text-shadow: 0 0 8px var(--teal-glow);
 }
+
+.status-msg {
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+.status-msg.success {
+  background: rgba(0, 242, 255, 0.1);
+  color: var(--teal-glow);
+  border: 1px solid var(--teal-glow);
+}
+
+.status-msg.error {
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+}

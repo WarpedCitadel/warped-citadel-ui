@@ -4,31 +4,58 @@ import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { Link } from 'react-router-dom';
 import { validateUsername, validateEmail, validatePassword } from '../utils/validation';
+import { signupUser } from '../utils/api';
 import '../styles/Signup.css';
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState({ username: '', email: '', password: '' });
+  const [serverMessage, setServerMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // 1. Run validations
-    const userValid = validateUsername(formData.username);
-    const emailValid = validateEmail(formData.email);
-    const passValid = validatePassword(formData.password);
+    setServerMessage(null); // Reset messages
 
-    // 2. Update error state
-    setErrors({
-      username: userValid.message,
-      email: emailValid.message,
-      password: passValid.message
-    });
+    const userCheck = validateUsername(formData.username);
+    const emailCheck = validateEmail(formData.email);
+    const passCheck = validatePassword(formData.password);
 
-    // 3. Only proceed if all are valid
-    if (userValid.isValid && emailValid.isValid && passValid.isValid) {
-      console.log("Form is valid! Sending to backend...", formData);
-      // This is where the api.ts file will be called later
+    if (!userCheck.isValid || !emailCheck.isValid || !passCheck.isValid) {
+      setErrors({
+        username: userCheck.message,
+        email: emailCheck.message,
+        password: passCheck.message
+      });
+      return;
+    }
+
+    // 2. Clear local errors and start loading
+    setErrors({ username: '', email: '', password: '' });
+    setIsLoading(true);
+
+    // Try to send to backend
+    try {
+      const result = await signupUser(formData);
+      
+      if (result.status === 201) {
+        setServerMessage("Account successfully created");
+        setFormData({ username: '', email: '', password: '' }); // Clear form
+      }
+    } catch (err: any) {
+      // 4. Handle Backend Errors (like user already exists)
+      // Assuming backend returns status 409 for conflicts
+      if (err.status === 409) {
+        setErrors(prev => ({ 
+          ...prev, 
+          username: err.response.includes("username") ? "Username already exists" : prev.username,
+          email: err.response.includes("email") ? "Email already exists" : prev.email 
+        }));
+      } else {
+        setServerMessage("An error occurred. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };  
 
@@ -37,6 +64,11 @@ const Signup: React.FC = () => {
       <div className="signup-center-wrapper">
         <Panel title="Join the Citadel">
           <form className="signup-form" onSubmit={handleSignup}>
+            {serverMessage && (
+              <div className={`status-msg ${serverMessage.includes('success') ? 'success' : 'error'}`}>
+                {serverMessage}
+              </div>
+            )}
             <Input 
               label="Username" 
               placeholder="Choose a username" 
@@ -63,7 +95,7 @@ const Signup: React.FC = () => {
             
             <div className="form-actions">
               <Button variant="primary" type="submit">
-                Create Account
+                {isLoading ? "Creating..." : "Create Account"}
               </Button>
             </div>
 
