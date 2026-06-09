@@ -64,6 +64,11 @@ const Signup: React.FC = () => {
       <div className="signup-center-wrapper">
         <Panel title="Join the Citadel">
           <form className="signup-form" onSubmit={handleSignup}>
+            {serverMessage && (
+              <div className={`status-msg ${serverMessage.includes('success') ? 'success' : 'error'}`}>
+                {serverMessage}
+              </div>
+            )}
             <Input 
               label="Username" 
               placeholder="Choose a username" 
@@ -90,7 +95,7 @@ const Signup: React.FC = () => {
             
             <div className="form-actions">
               <Button variant="primary" type="submit">
-                Create Account
+                {isLoading ? "Creating..." : "Create Account"}
               </Button>
             </div>
 

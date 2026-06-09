@@ -45,8 +45,11 @@ const Login: React.FC = () => {
       <div className="login-center-wrapper">
         <Panel title="Login">
           <form className="login-form" onSubmit={handleLogin}>
-            {statusMsg && <p style={{ color: '#ff4d4d', textAlign: 'center', fontSize: '0.85rem' }}>{statusMsg}</p>}
-
+            {statusMsg &&
+              <div className="status-msg error">
+                {statusMsg}
+              </div>
+            }
             <Input 
               label="Username" 
               placeholder="Enter your username" 
