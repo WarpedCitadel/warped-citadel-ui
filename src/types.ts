@@ -7,3 +7,17 @@ export interface Game {
   banner: string;
   description: string;
 }
+
+export interface SignupRequest {
+  username: string;
+  password: string;
+  email: string;
+}
+
+export interface SignupResponse {
+  title: string;
+  status: number;
+  response: string;
+  instance: string;
+  timestamp: string;
+}
