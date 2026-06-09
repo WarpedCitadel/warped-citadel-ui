@@ -21,3 +21,18 @@ export interface SignupResponse {
   instance: string;
   timestamp: string;
 }
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  title: string;
+  status: number;
+  response: {
+    UserUUID: string;
+  };
+  instance: string;
+  timestamp: string;
+}

@@ -3,16 +3,19 @@ import Panel from '../components/UI/Panel';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import { Link } from 'react-router-dom';
+import { loginUser } from '../utils/api';
 import '../styles/Login.css';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [errors, setErrors] = useState({ username: '', password: '' });
+  const [statusMsg, setStatusMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setStatusMsg('');
     
-    // Basic check: Are fields empty?
     const userValid = formData.username.length > 0;
     const passValid = formData.password.length > 0;
 
@@ -22,7 +25,18 @@ const Login: React.FC = () => {
     });
 
     if (userValid && passValid) {
-       console.log("Attempting Login...");
+      setIsLoading(true);
+      try {
+        const result = await loginUser(formData);
+        if (result.status === 200) {
+          console.log("Login Success! UUID:", result.response.UserUUID);
+          // TODO: Redirect user and save UUID to context/localStorage
+        }
+      } catch (err: any) {
+        setStatusMsg(err.response || "Invalid username or password");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -31,6 +45,8 @@ const Login: React.FC = () => {
       <div className="login-center-wrapper">
         <Panel title="Login">
           <form className="login-form" onSubmit={handleLogin}>
+            {statusMsg && <p style={{ color: '#ff4d4d', textAlign: 'center', fontSize: '0.85rem' }}>{statusMsg}</p>}
+
             <Input 
               label="Username" 
               placeholder="Enter your username" 
@@ -49,7 +65,7 @@ const Login: React.FC = () => {
             
             <div className="form-actions">
               <Button variant="primary" type="submit">
-                Login
+                {isLoading ? "Logging in..." : "Login"}
               </Button>
             </div>
 
