@@ -2,9 +2,9 @@ name: Build test and deploy to PROD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "infra/s3-deploy-prod" ] # change to main
   pull_request:
-    branches: [ "main" ]
+    branches: [ "infra/s3-deploy-prod" ]
 
 jobs:
   test-and-verify:
@@ -29,7 +29,7 @@ jobs:
   build-and-push-s3:
     needs: test-and-verify
     runs-on: ubuntu-24.04
-    if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request' || github.event_name == 'push'
+    if: github.ref == 'refs/heads/infra/s3-deploy-prod' && github.event_name == 'push' # change to main
 
     steps:
       - name: Checkout code
