@@ -2,9 +2,9 @@ name: Build test and deploy to PROD
 
 on:
   push:
-    branches: [ "infra/s3-deploy-prod" ] # change to main
+    branches: [ "main" ]
   pull_request:
-    branches: [ "infra/s3-deploy-prod" ]
+    branches: [ "main" ]
 
 jobs:
   test-and-verify:
@@ -29,7 +29,7 @@ jobs:
   build-and-push-s3:
     needs: test-and-verify
     runs-on: ubuntu-24.04
-    if: github.ref == 'refs/heads/infra/s3-deploy-prod' && github.event_name == 'push' # change to main
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
    
     permissions:
