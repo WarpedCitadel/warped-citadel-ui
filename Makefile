@@ -60,17 +60,6 @@ deploy_dev:
 	@echo "Building container warped-citadel-ui..."
 	docker compose up wc_dev -d
 
-deploy_prod:
-	@echo Deploying PROD warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
-	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
-	
-	@echo "Pulling image warpedcitadel/$(IMAGE_NAME):prod..."
-	docker pull warpedcitadel/$(IMAGE_NAME):prod
-	
-	@echo "Building container warped-citadel-ui..."
-	docker compose up wc_prod -d
-
-
 # ------ rip application ------
 rip_local:
 	@echo Ripping LOCAL warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
@@ -93,17 +82,6 @@ rip_dev:
 	
 	@echo "Removing image warpedcitadel/$(IMAGE_NAME):dev..."
 	-docker rmi -f warpedcitadel/$(IMAGE_NAME):dev
-
-rip_prod:
-	@echo Ripping PROD warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
-	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
-	
-	@echo "Stopping and removing container warped-citadel-ui..."
-	-docker stop $(CONTAINER_NAME)-wc_prod-1
-	-docker rm $(CONTAINER_NAME)-wc_prod-1
-	
-	@echo "Removing image warpedcitadel/$(IMAGE_NAME):prod..."
-	-docker rmi -f warpedcitadel/$(IMAGE_NAME):prod
 
 
 # ------ rip and deploy application ------
