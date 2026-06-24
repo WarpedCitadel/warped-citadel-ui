@@ -5,14 +5,14 @@ export interface ValidationResult {
 
 /**
  * Username Requirements:
- * - 3-20 characters
+ * - 5-20 characters
  * - Alphanumeric, underscores, dots, hyphens
  * - No symbols at start/end
  * - No double symbols (.. , --, __, .-, etc.)
  * - No spaces
  */
 export const validateUsername = (username: string): ValidationResult => {
-  const min = 3;
+  const min = 5;
   const max = 20;
 
   if (username.length < min || username.length > max) {
