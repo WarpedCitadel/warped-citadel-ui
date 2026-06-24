@@ -46,13 +46,8 @@ const Signup: React.FC = () => {
       // 4. Handle Backend Errors (like user already exists)
       // Assuming backend returns status 409 for conflicts
       if (err.status === 409) {
-        setErrors(prev => ({ 
-          ...prev, 
-          username: err.response.includes("username") ? "Username already exists" : prev.username,
-          email: err.response.includes("email") ? "Email already exists" : prev.email 
-        }));
-      } else {
-        setServerMessage("An error occurred. Please try again.");
+        //ideally the backend would specifiy which field is conflicting
+        setServerMessage(err.error?.message ?? "Username or email already exists");
       }
     } finally {
       setIsLoading(false);
