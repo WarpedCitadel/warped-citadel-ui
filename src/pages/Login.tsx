@@ -29,11 +29,12 @@ const Login: React.FC = () => {
       try {
         const result = await loginUser(formData);
         if (result.status === 200) {
-          console.log("Login Success! UUID:", result.response.UserUUID);
+          console.log("Login Success! UUID:", result.data.userUUID);
           // TODO: Redirect user and save UUID to context/localStorage
         }
       } catch (err: any) {
-        setStatusMsg(err.response || "Invalid username or password");
+        setStatusMsg(err.data || "Invalid username or password");
+        console.log("Login Failed:", err);
       } finally {
         setIsLoading(false);
       }

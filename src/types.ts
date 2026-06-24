@@ -30,8 +30,8 @@ export interface LoginRequest {
 export interface LoginResponse {
   title: string;
   status: number;
-  response: {
-    UserUUID: string;
+  data: {
+    userUUID: string;
   };
   instance: string;
   timestamp: string;
