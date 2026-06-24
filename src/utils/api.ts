@@ -8,12 +8,14 @@ export const signupUser = async (data: SignupRequest): Promise<SignupResponse> =
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'x-api-version': '1.0',
     },
     body: JSON.stringify(data),
   });
 
   const result = await response.json();
-  console.log("Signup API Response:", result);
+  console.log("Signup API Response:", result);  //testing
 
   if (!response.ok) {
     throw result;
@@ -26,11 +28,16 @@ export const signupUser = async (data: SignupRequest): Promise<SignupResponse> =
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+       'Content-Type': 'application/json',
+       'Accept': 'application/json',
+       'x-api-version': '1.0',
+      },
     body: JSON.stringify(data),
   });
 
   const result = await response.json();
+  console.log("Login API Response:", result); //testing
   if (!response.ok) throw result;
   return result as LoginResponse;
 };
