@@ -1,10 +1,13 @@
 export interface Game {
-  id: number;
+  uuid: string;
   title: string;
   dev: string;
   tags: string[];
   image: string;
   banner: string;
+  data: {
+    fileUUID: string;
+  }
   description: string;
 }
 
