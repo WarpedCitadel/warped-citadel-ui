@@ -39,5 +39,10 @@ export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
   const result = await response.json();
   console.log("Login API Response:", result); //testing
   if (!response.ok) throw result;
-  return result as LoginResponse;
+
+  return {
+    ...result,
+    status: response.status,
+    headers: response.headers,
+  };
 };

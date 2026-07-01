@@ -28,9 +28,20 @@ const Login: React.FC = () => {
       setIsLoading(true);
       try {
         const result = await loginUser(formData);
+        
         if (result.status === 200) {
-          console.log("Login Success! UUID:", result.data.userUUID);
-          // TODO: Redirect user and save UUID to context/localStorage
+          const token = result.headers.get("Authorization");
+
+          if (token) {
+            localStorage.setItem("jwt", token);
+          }
+
+          localStorage.setItem("userUUID", result.data.userUUID);
+
+          console.log("Login Success! UUID:", result.data.userUUID, "", "Token:", token);
+
+          //TODO: redirect to homepage
+          //TODO: check if the user's email is verified, if not redirect to email verification page, and do not save the UUID 
         }
       } catch (err: any) {
         setStatusMsg(err.data || "Invalid username or password");

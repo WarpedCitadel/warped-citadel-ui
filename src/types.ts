@@ -30,6 +30,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   title: string;
   status: number;
+  headers: Headers;
   data: {
     userUUID: string;
   };
