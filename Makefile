@@ -45,10 +45,10 @@ deploy_local:
 	@read line; if [ ! $$line = "Y" ] && [ ! $$line = "y" ]; then echo Aborting...; exit 1; fi
 	
 	@echo "Building image $(IMAGE_NAME):local..."
-	docker build -t $(IMAGE_NAME):local .
+	docker build --no-cache -t $(IMAGE_NAME):local .
 	
 	@echo "Building container warped-citadel-ui..."
-	docker compose up wc_local --build -d
+	docker compose up wc_local --build --force-recreate -d
 
 deploy_dev:
 	@echo Deploying DEV warped-citadel-ui at $(localappip):$(localappport). Are you sure? [Y/n]
@@ -93,7 +93,7 @@ rip_deploy_local:
 	docker compose down
 	
 	@echo "Building image $(IMAGE_NAME):local..."
-	docker build -t $(IMAGE_NAME):local .
+	docker build --no-cache -t $(IMAGE_NAME):local .
 	
 	@echo "Building container warped-citadel-ui..."
 	docker compose up wc_local --build -d
