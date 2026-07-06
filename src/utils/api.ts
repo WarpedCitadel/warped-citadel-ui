@@ -1,9 +1,10 @@
 import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse } from '../types';
 
+const API_BASE_URL = 'http://localhost:8083';
 
 //signup api request
 export const signupUser = async (data: SignupRequest): Promise<SignupResponse> => {
-  const response = await fetch("/api/auth/signup", {
+  const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ export const signupUser = async (data: SignupRequest): Promise<SignupResponse> =
 
 //login api request
 export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
-  const response = await fetch(`/api/auth/login`, {
+  const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
     method: 'POST',
     headers: {
        'Content-Type': 'application/json',
