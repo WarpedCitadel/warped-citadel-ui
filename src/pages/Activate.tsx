@@ -19,10 +19,14 @@ const Activate: React.FC = () => {
 
   // If someone browses directly here, redirect to signup
   useEffect(() => {
-    if (!email || !token) {
-        navigate("/signup");
+  if (!email || !token) {
+    navigate("/signup");
     }
   }, [email, token, navigate]);
+
+  if (!email || !token) {
+    return null;
+  }
 
   const handleVerify = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
