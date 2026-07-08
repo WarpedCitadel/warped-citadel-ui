@@ -20,7 +20,10 @@ export interface SignupRequest {
 export interface SignupResponse {
   title: string;
   status: number;
-  response: string;
+  data: {
+    email: string;
+    sessionToken: string;
+  };
   instance: string;
   timestamp: string;
 }

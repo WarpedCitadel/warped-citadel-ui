@@ -1,6 +1,7 @@
 import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse } from '../types';
 
 const API_BASE_URL = 'http://localhost:8083';
+// const MANAGMENT_URL = 'http://localhost:8080';
 
 //signup api request
 export const signupUser = async (data: SignupRequest): Promise<SignupResponse> => {
@@ -50,3 +51,57 @@ export const loginUser = async (data: LoginRequest): Promise<LoginResponse> => {
     headers: response.headers,
   };
 };
+
+//verify email api request
+export const activateAccount = async (token: string, passcode: string) => {
+    const response = await fetch(
+        `${API_BASE_URL}/api/auth/activate`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "x-api-version": "1.0",
+            },
+            body: JSON.stringify({
+                token,
+                passcode
+            })
+        }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok)
+        throw result;
+
+    return result;
+};
+
+//resend passcode api request
+export const resendPasscode = async (
+    email: string
+) => {
+
+    const response = await fetch(
+        `${API_BASE_URL}/api/auth/activate/resend`,
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Accept":"application/json",
+                "x-api-version":"1.0",
+            },
+            body:JSON.stringify({
+                email
+            })
+        }
+    );
+
+    const result = await response.json();
+
+    if(!response.ok)
+        throw result;
+
+    return result;
+}
