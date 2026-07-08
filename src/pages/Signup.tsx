@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import Panel from '../components/UI/Panel';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { validateUsername, validateEmail, validatePassword } from '../utils/validation';
 import { signupUser } from '../utils/api';
 import '../styles/Signup.css';
 
+
 const Signup: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [errors, setErrors] = useState({ username: '', email: '', password: '' });
   const [serverMessage, setServerMessage] = useState<string | null>(null);
@@ -39,8 +41,14 @@ const Signup: React.FC = () => {
       const result = await signupUser(formData);
       
       if (result.status === 201) {
-        setServerMessage("Account successfully created");
-        setFormData({ username: '', email: '', password: '' }); // Clear form
+        // Signup successful, take to email verification page
+
+        localStorage.setItem("activationSessionToken", result.data.sessionToken);
+        localStorage.setItem("activationEmail", result.data.email);
+
+        navigate("/signup/activate");
+        // setServerMessage("Account successfully created");
+        // setFormData({ username: '', email: '', password: '' }); // Clear form
       }
     } catch (err: any) {
       // 4. Handle Backend Errors (like user already exists)
