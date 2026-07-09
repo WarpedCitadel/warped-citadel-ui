@@ -37,14 +37,19 @@
 .profile-button {
   background: transparent;
   border: none;
-  color: var(--text-main);
+  color: var(--teal-glow);
+
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
   font-size: 1rem;
   cursor: pointer;
   padding: 0.5rem;
 }
 
 .profile-button:hover {
-  color: var(--teal-glow);
+  filter: drop-shadow(0 0px 4px var(--teal-glow));
 }
 
 .dropdown-menu {
@@ -85,4 +90,13 @@
 
 .logout {
   color: #ff7676;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
 }
