@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import Panel from '../components/UI/Panel';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../utils/api';
 import '../styles/Login.css';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [errors, setErrors] = useState({ username: '', password: '' });
   const [statusMsg, setStatusMsg] = useState('');
@@ -41,8 +43,11 @@ const Login: React.FC = () => {
 
           console.log("Login Success! UUID:", result.data.userUUID, "", "Token:", token);
 
-          //TODO: redirect to homepage
-          //TODO: check if the user's email is verified, if not redirect to email verification page, and do not save the UUID 
+          navigate("/");
+
+          // TODO redirect to profile page if they dont have a display name yet, 
+          // otherwise go back to where they were
+
         }
       } catch (err: any) {
         setStatusMsg(err.data || "Invalid username or password");
