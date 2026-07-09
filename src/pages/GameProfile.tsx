@@ -1,7 +1,7 @@
 const GameProfile = () => {
 
   // TODO: Backend will provide dynamic url from an API
-  const gameUrl = `https://www.warpedcitadel.com/html/019f1969-525c-7c73-98f7-6fb8d3588fc8/notindex.html`; // hardcoded
+  const gameUrl = `https://www.warpedcitadel.com/games/019f4381-b78d-7acb-9f50-44fc2cdcc3b1/019f4428-d472-7368-a10b-0159e1f47161/notindex.html`; // hardcoded
 
 
   // Add gameprofile content on web page
