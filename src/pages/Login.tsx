@@ -37,6 +37,7 @@ const Login: React.FC = () => {
           }
 
           localStorage.setItem("userUUID", result.data.userUUID);
+          localStorage.setItem("displayName", result.data.username);
 
           console.log("Login Success! UUID:", result.data.userUUID, "", "Token:", token);
 

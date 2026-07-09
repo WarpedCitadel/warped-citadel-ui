@@ -39,6 +39,7 @@ export interface LoginResponse {
   headers: Headers;
   data: {
     userUUID: string;
+    username: string;
   };
   instance: string;
   timestamp: string;
