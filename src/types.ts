@@ -44,3 +44,11 @@ export interface LoginResponse {
   instance: string;
   timestamp: string;
 }
+
+export interface UserProfile {
+  username: string;
+  displayName: string;
+  bio: string;
+  pfp?: string;
+  banner?: string;
+}

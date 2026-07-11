@@ -1,0 +1,56 @@
+.profile-header {
+  width: 100%;
+  background: var(--bg-surface);
+  border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+  margin-bottom: 40px;
+}
+
+.profile-banner {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.5);
+}
+
+.profile-info-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5% 30px 5%;
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  margin-top: -60px; /* Overlap the banner */
+}
+
+.profile-pfp {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px; /* Square with rounded corners looks techy */
+  border: 3px solid var(--bg-dark);
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+  background: var(--bg-dark);
+  object-fit: cover;
+}
+
+.profile-text {
+  padding-bottom: 10px;
+}
+
+.display-name {
+  font-size: 2.5rem;
+  margin: 0;
+  color: white;
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+}
+
+.username {
+  color: var(--teal-glow);
+  margin: 0 0 15px 0;
+  font-family: monospace;
+}
+
+.bio {
+  color: var(--text-dim);
+  max-width: 600px;
+  line-height: 1.6;
+}

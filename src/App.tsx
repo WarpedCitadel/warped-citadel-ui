@@ -6,6 +6,7 @@ import Activate from './pages/Activate';
 import Navbar from './components/Navbar';
 import GameProfile from './pages/GameProfile';
 import './App.css';
+import Profile from './pages/UserProfile';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signup/activate" element={<Activate />} />
          <Route path="/gameProfile/:uuid" element={<GameProfile />} />
+         <Route path="/user" element={<Profile />} /> 
       </Routes>
     </div>
   );
