@@ -13,8 +13,8 @@ const MOCK_USER: UserProfile = {
 
 // Mock Data for User's Games
 const USER_GAMES: Game[] = [
-  { id: 1, title: "Neon Drifter", dev: "TestUser", tags: ["Action"], image: "https://picsum.photos/seed/1/400/250", banner: "", description: "" },
-  { id: 4, title: "Citadel Siege", dev: "TestUser", tags: ["Strategy"], image: "https://picsum.photos/seed/12/400/250", banner: "", description: "" },
+  { uuid: "1", title: "Neon Drifter", dev: "TestUser", tags: ["Action"], image: "https://picsum.photos/seed/1/400/250", banner: "", description: "", data: { fileUUID: "file1" } },
+  { uuid: "4", title: "Citadel Siege", dev: "TestUser", tags: ["Strategy"], image: "https://picsum.photos/seed/12/400/250", banner: "", description: "", data: { fileUUID: "file4" } },
 ];
 
 const Profile: React.FC = () => {
@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
           {USER_GAMES.length > 0 ? (
             <div className="game-grid">
               {USER_GAMES.map(game => (
-                <GameCard key={game.id} game={game} />
+                <GameCard key={game.uuid} game={game} />
               ))}
             </div>
           ) : (
