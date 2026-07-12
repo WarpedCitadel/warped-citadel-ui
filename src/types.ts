@@ -50,5 +50,4 @@ export interface UserProfile {
   displayName: string;
   bio: string;
   pfp?: string;
-  banner?: string;
 }

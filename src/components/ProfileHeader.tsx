@@ -9,8 +9,6 @@ interface ProfileHeaderProps {
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
   return (
     <div className="profile-header">
-      {/* Optional Banner */}
-      <div className="profile-banner" style={{ backgroundImage: `url(${user.banner || 'https://picsum.photos/seed/bg/1200/300'})` }}></div>
       
       <div className="profile-info-container">
         <div className="pfp-wrapper">

@@ -9,7 +9,6 @@ const MOCK_USER: UserProfile = {
   displayName: "Kaden",
   bio: "Indie dev focused on high-speed synthwave aesthetics and rogue-like mechanics. Building the future of the WarpedCitadel.",
   pfp: "https://picsum.photos/seed/user/200/200",
-  banner: "https://picsum.photos/seed/banner/1200/400"
 };
 
 // Mock Data for User's Games
