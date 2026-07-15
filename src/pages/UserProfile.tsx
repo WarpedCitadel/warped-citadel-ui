@@ -55,11 +55,23 @@ const Profile: React.FC = () => {
   }, [username]);
 
   if (loading) {
-    return <div className="content">Loading profile...</div>;
+    return (
+      <main className="content">
+        <div className="profile-status">
+          Loading profile...
+        </div>
+      </main>
+    );
   }
 
   if (error || !user) {
-    return <div className="content">{error || "Profile not found."}</div>;
+    return (
+      <main className="content">
+        <div className="profile-status">
+          {error || "Profile not found."}
+        </div>
+      </main>
+    );
   }
 
   return (

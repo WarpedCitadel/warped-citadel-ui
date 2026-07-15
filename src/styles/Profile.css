@@ -48,3 +48,27 @@
   max-width: 600px;
   line-height: 1.6;
 }
+
+.content {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 5%;
+}
+
+.profile-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1rem 1.75rem;
+
+  background: rgba(25, 25, 25, 0.9);
+  border: 1px solid var(--teal-dim);
+  border-radius: 10px;
+
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  font-weight: 500;
+
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.08);
+}
