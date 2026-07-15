@@ -18,7 +18,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/signup/activate" element={<Activate />} />
          <Route path="/gameProfile/:uuid" element={<GameProfile />} />
-         <Route path="/user" element={<Profile />} /> 
+         <Route path="/user/:username" element={<Profile />} /> 
+         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </div>
   );

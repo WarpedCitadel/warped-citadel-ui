@@ -1,39 +1,90 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import ProfileHeader from '../components/ProfileHeader';
 import GameCard from '../components/GameCard';
+import { getUserProfile } from '../utils/api';
 import type { UserProfile, Game } from '../types';
 
-// Mock Data for the Profile
-const MOCK_USER: UserProfile = {
-  username: "TestUser",
-  displayName: "Kaden",
-  bio: "Indie dev focused on high-speed synthwave aesthetics and rogue-like mechanics. Building the future of the WarpedCitadel.",
-  pfp: "https://picsum.photos/seed/user/200/200",
-};
-
-// Mock Data for User's Games
-const USER_GAMES: Game[] = [
-  { uuid: "1", title: "Neon Drifter", dev: "TestUser", tags: ["Action"], image: "https://picsum.photos/seed/1/400/250", banner: "", description: "", data: { fileUUID: "file1" } },
-  { uuid: "4", title: "Citadel Siege", dev: "TestUser", tags: ["Strategy"], image: "https://picsum.photos/seed/12/400/250", banner: "", description: "", data: { fileUUID: "file4" } },
-];
-
 const Profile: React.FC = () => {
+  const { username } = useParams<{ username: string }>();
+
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!username) return;
+
+    const fetchProfile = async () => {
+      setLoading(true);
+      setError("");
+
+      try {
+        const result = await getUserProfile(username);
+
+        setUser({
+          username: result.data.username,
+          displayName: result.data.displayName,
+          bio: result.data.biography ?? "",
+          pfp: result.data.profileImgUUID ?? "",
+        });
+
+        const loadedGames: Game[] = (result.data.createdGames ?? []).map((game: any) => ({
+          uuid: game.fileUUID,
+          title: game.title,
+          dev: result.data.displayName,
+          tags: [game.genre],
+          image: game.coverImgUUID ?? "",
+          banner: "",
+          description: game.description,
+          data: {
+            fileUUID: game.fileUUID,
+          },
+        }));
+
+        setGames(loadedGames);
+      } catch (err: any) {
+        setError(err.error?.message ?? "Unable to load profile.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [username]);
+
+  if (loading) {
+    return <div className="content">Loading profile...</div>;
+  }
+
+  if (error || !user) {
+    return <div className="content">{error || "Profile not found."}</div>;
+  }
+
   return (
     <div className="profile-page">
-      <ProfileHeader user={MOCK_USER} />
-      
+      <ProfileHeader user={user} />
+
       <main className="content">
         <section className="section-group">
-          <h2 className="section-title">Games by {MOCK_USER.displayName}</h2>
-          
-          {USER_GAMES.length > 0 ? (
+          <h2 className="section-title">
+            Games by {user.displayName}
+          </h2>
+
+          {games.length > 0 ? (
             <div className="game-grid">
-              {USER_GAMES.map(game => (
-                <GameCard key={game.uuid} game={game} />
+              {games.map(game => (
+                <GameCard
+                  key={game.uuid}
+                  game={game}
+                />
               ))}
             </div>
           ) : (
-            <p className="no-games">This user hasn't uploaded any games yet.</p>
+            <p className="no-games">
+              This user hasn't uploaded any games yet.
+            </p>
           )}
         </section>
       </main>

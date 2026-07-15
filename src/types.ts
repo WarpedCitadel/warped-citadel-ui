@@ -49,5 +49,5 @@ export interface UserProfile {
   username: string;
   displayName: string;
   bio: string;
-  pfp?: string;
+  pfp: string;
 }

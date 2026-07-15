@@ -1,7 +1,7 @@
 import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse } from '../types';
 
 const API_BASE_URL = 'http://localhost:8083';
-// const MANAGMENT_URL = 'http://localhost:8080';
+const USER_MANAGEMENT_URL = 'http://localhost:8080';
 
 //signup api request
 export const signupUser = async (data: SignupRequest): Promise<SignupResponse> => {
@@ -105,3 +105,25 @@ export const resendPasscode = async (
 
     return result;
 }
+
+export const getUserProfile = async (username: string) => {
+  const response = await fetch(
+    `${USER_MANAGEMENT_URL}/api/user/profile/${username}`,
+    {
+      method: "GET",
+      headers:{
+        "Content-Type":"application/json",
+        "Accept":"application/json",
+        "x-api-version":"1.0",
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw result;
+  }
+
+  return result;
+};
