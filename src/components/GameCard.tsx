@@ -13,7 +13,8 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
   return (
     <div
       className="game-card"
-      onClick={() => navigate(`/gameProfile/${game.title}`)}
+      // TODO: make this look way nicer, preferably based on user/game name, not uuid 
+      onClick={() => navigate(`/gameProfile/${game.gameProfileUUID}`)}
       style={{ cursor: "pointer" }}
     >
       <div

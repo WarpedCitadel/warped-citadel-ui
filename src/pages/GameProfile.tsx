@@ -1,8 +1,13 @@
+import { useParams } from 'react-router-dom';
+
 const GameProfile = () => {
-
-  // TODO: Backend will provide dynamic url from an API
-  const gameUrl = `https://www.warpedcitadel.com/games/019f4381-b78d-7acb-9f50-44fc2cdcc3b1/019f4428-d472-7368-a10b-0159e1f47161/notindex.html`; // hardcoded
-
+  
+  const { uuid } = useParams<{ uuid: string }>();
+  // const gameUrl = `https://www.warpedcitadel.com/games/${uuid}`;
+  //TODO: scratch all this, this should call an api to fetch the proper URL for the iFrame. 
+  
+  // jared's temp game url for testing iframe
+  const gameUrl = `https://www.warpedcitadel.com/games/019f590b-e855-73ce-aebb-2b1a3820ad64/files/Planet%20Game%20Tech%20Demo0.1%20-%20Web.zip/Planet%20Game%20Tech%20Demo0.1/index.html`;
 
   // Add gameprofile content on web page
 

@@ -1,5 +1,5 @@
 export interface Game {
-  uuid: string;
+  gameProfileUUID: string;
   title: string;
   dev: string;
   tags: string[];

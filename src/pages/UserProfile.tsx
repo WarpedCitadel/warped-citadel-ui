@@ -33,11 +33,11 @@ const Profile: React.FC = () => {
         });
 
         const loadedGames: Game[] = (result.data.createdGames ?? []).map((game: any) => ({
-          uuid: game.fileUUID,
+          gameProfileUUID: game.gameProfileUUID,
           title: game.title,
           dev: result.data.displayName,
           tags: [game.genre],
-          image: game.coverImgUUID ?? "",
+          image: game.profileImage ?? "",
           banner: "",
           description: game.description,
           data: {
@@ -92,7 +92,7 @@ const Profile: React.FC = () => {
             <div className="game-grid">
               {games.map(game => (
                 <GameCard
-                  key={game.uuid}
+                  key={game.gameProfileUUID}
                   game={game}
                 />
               ))}
