@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
             {menuOpen && (
               <div className="dropdown-menu">
                 <Link
-                  to="/profile"
+                  to={`/user/${localStorage.getItem("displayName")}`}
                   className="dropdown-item"
                   onClick={() => setMenuOpen(false)}
                 >
