@@ -24,10 +24,12 @@ const Profile: React.FC = () => {
         const result = await getUserProfile(username);
 
         setUser({
-          username: result.data.username,
+          // TODO, when the result returns the username, use that instead of the url incase of capitalization differences or uuid
+          // username: result.data.username,
+          username: username,
           displayName: result.data.displayName,
           bio: result.data.biography ?? "",
-          pfp: result.data.profileImgUUID ?? "",
+          pfp: result.data.profileImage ?? "",
         });
 
         const loadedGames: Game[] = (result.data.createdGames ?? []).map((game: any) => ({
