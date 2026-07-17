@@ -3,15 +3,15 @@ import GameCard from '../components/GameCard';
 import type { Game } from '../types';
 
 const MOCK_GAMES: Game[] = [
-  { uuid: "019f09f4-8b48-77bb-b5c0-7a70a8cd7071", title: "Neon Drifter", dev: "CyberPunk Studio", 
+  { gameProfileUUID: "019f09f4-8b48-77bb-b5c0-7a70a8cd7071", title: "Neon Drifter", dev: "CyberPunk Studio", 
     tags: ["Action", "Indie"], image: "https://picsum.photos/seed/1/400/250", banner: "https://picsum.photos/seed/1/1200/600", 
     data: {fileUUID: "019f1969-525c-7c73-98f7-6fb8d3588fc8"}, description: "A high-octane racer set in a dystopian future." },
 
-  { uuid: "019f09f4-8b4b-71e0-9cf2-a0361c34681a", title: "Void Crawler", dev: "Abyss Games", 
+  { gameProfileUUID: "019f09f4-8b4b-71e0-9cf2-a0361c34681a", title: "Void Crawler", dev: "Abyss Games", 
     tags: ["RPG", "Rogue-like"], image: "https://picsum.photos/seed/2/400/250", banner: "https://picsum.photos/seed/2/1200/600", 
     data: {fileUUID: "019f1969-525c-7c73-98f7-6fb8d3588fc8"}, description: "Explore the endless depths of the digital void." },
     
-  { uuid: "019f09f4-8b4b-703b-ab1a-df634224c668", title: "Pixel Siege", dev: "Retro-Fit",
+  { gameProfileUUID: "019f09f4-8b4b-703b-ab1a-df634224c668", title: "Pixel Siege", dev: "Retro-Fit",
     tags: ["Strategy"], image: "https://picsum.photos/seed/3/400/250", banner: "https://picsum.photos/seed/3/1200/600", 
     data: {fileUUID: "019f1969-525c-7c73-98f7-6fb8d3588fc8"}, description: "Defend your citadel against 8-bit invaders." },
 ];
@@ -26,7 +26,7 @@ const Home: React.FC = () => {
           <h2 className="section-title">Popular Games</h2>
           <div className="game-grid">
             {MOCK_GAMES.map(game => (
-              <GameCard key={game.uuid} game={game} />
+              <GameCard key={game.gameProfileUUID} game={game} />
             ))}
           </div>
         </section>
@@ -35,7 +35,7 @@ const Home: React.FC = () => {
           <h2 className="section-title">Rising Projects</h2>
           <div className="game-grid">
             {[...MOCK_GAMES].reverse().map(game => (
-              <GameCard key={game.uuid} game={game} />
+              <GameCard key={game.gameProfileUUID} game={game} />
             ))}
           </div>
         </section>

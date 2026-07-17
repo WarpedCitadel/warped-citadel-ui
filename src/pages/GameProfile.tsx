@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
 const GameProfile = () => {
   
-  const { uuid } = useParams<{ uuid: string }>();
+  // const { uuid } = useParams<{ uuid: string }>();
   // const gameUrl = `https://www.warpedcitadel.com/games/${uuid}`;
   //TODO: scratch all this, this should call an api to fetch the proper URL for the iFrame. 
   
