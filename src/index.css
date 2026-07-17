@@ -1,4 +1,16 @@
 :root {
+
+  /* STEAM COLORS */
+  /* --bg-dark: #171a21;
+  --bg-surface: #232730;
+  --teal-glow: #66c0f4;
+  --teal-shadow: #66c0f44d;
+  --teal-dim: #417c9e;
+  --text-main: #e0e0e0;
+  --text-dim: #a0a0a0;
+  --navbar-bg: #171a21f2; */
+
+  /* BASE COLORS */
   --bg-dark: #0f0f0f;
   --bg-surface: #1a1a1a;
   --teal-glow: #006c58;
@@ -6,6 +18,7 @@
   --teal-dim: #004337;
   --text-main: #e0e0e0;
   --text-dim: #a0a0a0;
+  --navbar-bg: rgba(15, 15, 15, 0.95);
 }
 
 body {
