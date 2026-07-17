@@ -69,8 +69,10 @@ const Profile: React.FC = () => {
   if (error || !user) {
     return (
       <main className="content">
-        <div className="profile-status">
-          {error || "Profile not found."}
+        <div className="profile-status-container">
+          <div className="profile-status">
+            {error || "Profile not found."}
+          </div>
         </div>
       </main>
     );
