@@ -19,7 +19,7 @@ function App() {
         <Route path="/signup/activate" element={<Activate />} />
          <Route path="/gameProfile/:uuid" element={<GameProfile />} />
          <Route path="/user/:username" element={<Profile />} /> 
-         <Route path="*" element={<h1>404</h1>} />
+         <Route path="*" element={<div className="error-pill">Page Not Found</div>} />
       </Routes>
     </div>
   );

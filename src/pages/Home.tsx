@@ -43,7 +43,9 @@ const Home: React.FC = () => {
     return (
       <div className="home-container">
         <main className="content">
-          <p>Loading games...</p>
+          <div className="error-pill">
+            Loading games...
+          </div>
         </main>
       </div>
     );
@@ -53,7 +55,9 @@ const Home: React.FC = () => {
     return (
       <div className="home-container">
         <main className="content">
-          <p>{error}</p>
+          <div className="error-pill">
+            {error}
+          </div>
         </main>
       </div>
     );

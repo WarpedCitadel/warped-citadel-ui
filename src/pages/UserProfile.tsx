@@ -59,7 +59,7 @@ const Profile: React.FC = () => {
   if (loading) {
     return (
       <main className="content">
-        <div className="profile-status">
+        <div className="error-pill">
           Loading profile...
         </div>
       </main>
@@ -69,10 +69,8 @@ const Profile: React.FC = () => {
   if (error || !user) {
     return (
       <main className="content">
-        <div className="profile-status-container">
-          <div className="profile-status">
-            {error || "Profile not found."}
-          </div>
+        <div className="error-pill">
+          {error || "Profile not found."}
         </div>
       </main>
     );
