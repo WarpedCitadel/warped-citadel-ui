@@ -2,6 +2,7 @@ import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse } from 
 
 const API_BASE_URL = 'http://localhost:8083';
 const USER_MANAGEMENT_URL = 'http://localhost:8080';
+const CONTENT_MANAGEMENT_URL = 'http://localhost:8082';
 
 //signup api request
 export const signupUser = async (data: SignupRequest): Promise<SignupResponse> => {
@@ -115,6 +116,28 @@ export const getUserProfile = async (username: string) => {
         "Content-Type":"application/json",
         "Accept":"application/json",
         "x-api-version":"1.0",
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw result;
+  }
+
+  return result;
+};
+
+export const getTrendingGames = async () => {
+  const response = await fetch(
+    `${CONTENT_MANAGEMENT_URL}/api/main/GetTrendingGames`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type":"application/json",
+        "Accept": "application/json",
+        "x-api-version": "1.0",
       },
     }
   );

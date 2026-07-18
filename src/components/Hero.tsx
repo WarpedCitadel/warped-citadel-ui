@@ -30,7 +30,7 @@ const Hero: React.FC<HeroProps> = ({ games }) => {
     <section 
       className="hero" 
       style={{ 
-        backgroundImage: `linear-gradient(to right, #0f0f0f, transparent), url(${currentGame.banner})` 
+        backgroundImage: `linear-gradient(to right, #0f0f0f, transparent), url(${currentGame.image})` 
       }}
     >
       <div className="hero-content">

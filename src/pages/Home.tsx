@@ -1,41 +1,91 @@
+import React, { useEffect, useState } from 'react';
 import Hero from '../components/Hero';
 import GameCard from '../components/GameCard';
+import { getTrendingGames } from '../utils/api';
 import type { Game } from '../types';
 
-const MOCK_GAMES: Game[] = [
-  { gameProfileUUID: "019f09f4-8b48-77bb-b5c0-7a70a8cd7071", title: "Neon Drifter", dev: "CyberPunk Studio", 
-    tags: ["Action", "Indie"], image: "https://picsum.photos/seed/1/400/250", banner: "https://picsum.photos/seed/1/1200/600", 
-    data: {fileUUID: "019f1969-525c-7c73-98f7-6fb8d3588fc8"}, description: "A high-octane racer set in a dystopian future." },
-
-  { gameProfileUUID: "019f09f4-8b4b-71e0-9cf2-a0361c34681a", title: "Void Crawler", dev: "Abyss Games", 
-    tags: ["RPG", "Rogue-like"], image: "https://picsum.photos/seed/2/400/250", banner: "https://picsum.photos/seed/2/1200/600", 
-    data: {fileUUID: "019f1969-525c-7c73-98f7-6fb8d3588fc8"}, description: "Explore the endless depths of the digital void." },
-    
-  { gameProfileUUID: "019f09f4-8b4b-703b-ab1a-df634224c668", title: "Pixel Siege", dev: "Retro-Fit",
-    tags: ["Strategy"], image: "https://picsum.photos/seed/3/400/250", banner: "https://picsum.photos/seed/3/1200/600", 
-    data: {fileUUID: "019f1969-525c-7c73-98f7-6fb8d3588fc8"}, description: "Defend your citadel against 8-bit invaders." },
-];
-
 const Home: React.FC = () => {
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadGames = async () => {
+      try {
+        const result = await getTrendingGames();
+
+        const loadedGames: Game[] = result.data.listGames.content.map((game: any) => ({
+          uuid: game.gameProfileUUID,
+          gameProfileUUID: game.gameProfileUUID, // if your GameCard expects this
+          title: game.title,
+          dev: "",
+          tags: [game.genre],
+          image: game.coverImage,
+          banner: "",
+          description: game.shortDesc,
+          data: {
+            fileUUID: game.gameProfileUUID,
+          },
+        }));
+
+        setGames(loadedGames);
+      } catch (err: any) {
+        setError(err.error?.message ?? "Unable to load games.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGames();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="home-container">
+        <main className="content">
+          <p>Loading games...</p>
+        </main>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="home-container">
+        <main className="content">
+          <p>{error}</p>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="home-container">
-      <Hero games={MOCK_GAMES} />
-      
+      <Hero games={games} />
+
       <main className="content">
         <section className="section-group">
           <h2 className="section-title">Popular Games</h2>
+
           <div className="game-grid">
-            {MOCK_GAMES.map(game => (
-              <GameCard key={game.gameProfileUUID} game={game} />
+            {games.slice(0, 3).map((game) => (
+              <GameCard
+                key={game.gameProfileUUID}
+                game={game}
+              />
             ))}
           </div>
         </section>
 
         <section className="section-group">
-          <h2 className="section-title">Rising Projects</h2>
+          <h2 className="section-title">Recently Added</h2>
+
           <div className="game-grid">
-            {[...MOCK_GAMES].reverse().map(game => (
-              <GameCard key={game.gameProfileUUID} game={game} />
+            {[...games].reverse().slice(0, 3).map((game) => (
+              <GameCard
+                key={game.gameProfileUUID}
+                game={game}
+              />
             ))}
           </div>
         </section>
