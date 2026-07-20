@@ -1,16 +1,61 @@
 .hero {
+  position: relative;
+  overflow: hidden;
+
   height: 500px;
-  background-size: cover;
-  background-position: center;
   display: flex;
   align-items: center;
   padding: 0 5%;
-  transition: background-image 0.8s ease-in-out;
   margin-bottom: 40px;
+
+  transition: 0.8s;
 }
 
+/* Blurred copy */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: var(--hero-image);
+  background-size: cover;
+  background-position: center;
+
+  filter: blur(50px);
+  transform: scale(1.1);
+  opacity: .60;
+
+  z-index: 0;
+}
+
+/* Sharp image */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: var(--hero-image);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  z-index: 1;
+}
+
+/* Dark overlay for readability */
 .hero-content {
+  position: relative;
+  z-index: 2;
   max-width: 600px;
+}
+
+.hero::before,
+.hero::after {
+  transition: background-image 0.2s ease-in-out;
+}
+
+.hero::before {
+  box-shadow: inset 350px 0 200px rgba(15, 15, 15, 0.3);
 }
 
 .trending-badge {
@@ -22,6 +67,7 @@
 .hero h1 {
   font-size: 3.5rem;
   margin: 10px 0;
+  text-shadow: 0px 0px 12px rgba(0, 0, 0, .9);
 }
 
 .hero p {

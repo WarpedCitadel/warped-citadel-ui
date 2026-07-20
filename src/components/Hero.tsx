@@ -27,11 +27,19 @@ const Hero: React.FC<HeroProps> = ({ games }) => {
   const currentGame = games[index];
 
   return (
-    <section 
-      className="hero" 
-      style={{ 
-        backgroundImage: `linear-gradient(to right, #0f0f0f, transparent), url(${currentGame.image})` 
-      }}
+    // <section 
+    //   className="hero" 
+    //   style={{ 
+    //     backgroundImage: `linear-gradient(to right, #0f0f0f, transparent), url(${currentGame.image})` 
+    //   }}
+    // >
+    <section
+      className="hero"
+      style={
+        {
+          "--hero-image": `url(${currentGame.image})`,
+        } as React.CSSProperties
+      }
     >
       <div className="hero-content">
         <span className="trending-badge">TRENDING NOW</span>
