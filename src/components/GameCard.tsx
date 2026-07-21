@@ -19,7 +19,11 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
     >
       <div
         className="card-img"
-        style={{ backgroundImage: `url(${game.image})` }}
+        style={
+          {
+            "--card-image": `url(${game.image})`,
+          } as React.CSSProperties
+        }
       />
       <div className="card-info">
         <h3>{game.title}</h3>
