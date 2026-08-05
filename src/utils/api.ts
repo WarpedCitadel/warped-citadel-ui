@@ -152,9 +152,23 @@ export const getTrendingGames = async () => {
 };
 
 export const getGameProfile = async (uuid: string): Promise<GameProfileResponse> => {
-  const response = await fetch(`${CONTENT_MANAGEMENT_URL}/getGameProfile/${uuid}`);
+  const response = await fetch(
+    `${CONTENT_MANAGEMENT_URL}/api/game/getGameProfile/${uuid}`, // Added /api/game/
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "x-api-version": "1.0", // This is likely what was causing the 403
+      },
+    }
+  );
+
+  const result = await response.json();
+
   if (!response.ok) {
-    throw new Error('Failed to fetch game profile');
+    throw result;
   }
-  return response.json();
+
+  return result as GameProfileResponse;
 };
