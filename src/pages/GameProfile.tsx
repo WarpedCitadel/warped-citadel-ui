@@ -85,7 +85,7 @@ const GameProfile: React.FC = () => {
         <div className="game-main-info">
           <div className="header-row">
             <h1>{game.title}</h1>
-            <p className="dev-name">By <Link to={`/profile/${game.userUUID}`}>{game.displayName}</Link></p>
+            <p className="dev-name">By <Link to={`/user/${game.userUUID}`}>{game.displayName}</Link></p>
           </div>
 
           <p className="game-description">{game.description}</p>
