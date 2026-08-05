@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import type { Game } from '../types';
+import type { GameCardData } from '../types';
 import '../styles/Hero.css';
 import Button from './UI/Button';
 
 interface HeroProps {
-  games: Game[];
+  games: GameCardData[];
 }
 
 const Hero: React.FC<HeroProps> = ({ games }) => {

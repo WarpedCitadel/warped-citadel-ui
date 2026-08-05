@@ -3,13 +3,13 @@ import { useParams } from 'react-router-dom';
 import ProfileHeader from '../components/ProfileHeader';
 import GameCard from '../components/GameCard';
 import { getUserProfile } from '../utils/api';
-import type { UserProfile, Game } from '../types';
+import type { UserProfile, GameCardData } from '../types';
 
 const Profile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
 
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<GameCardData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -32,7 +32,7 @@ const Profile: React.FC = () => {
           pfp: result.data.profileImage ?? "",
         });
 
-        const loadedGames: Game[] = (result.data.createdGames ?? []).map((game: any) => ({
+        const loadedGames: GameCardData[] = (result.data.createdGames ?? []).map((game: any) => ({
           gameProfileUUID: game.gameProfileUUID,
           title: game.title,
           dev: result.data.displayName,

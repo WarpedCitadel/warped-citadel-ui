@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import type { Game } from "../types";
+import type { GameCardData } from "../types";
 import "../styles/GameCard.css";
 
 interface GameCardProps {
-  game: Game;
+  game: GameCardData;
 }
 
 const GameCard: React.FC<GameCardProps> = ({ game }) => {

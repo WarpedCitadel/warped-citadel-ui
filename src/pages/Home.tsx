@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Hero from '../components/Hero';
 import GameCard from '../components/GameCard';
 import { getTrendingGames } from '../utils/api';
-import type { Game } from '../types';
+import type { GameCardData } from '../types';
 
 const Home: React.FC = () => {
-  const [games, setGames] = useState<Game[]>([]);
+  const [games, setGames] = useState<GameCardData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -14,8 +14,8 @@ const Home: React.FC = () => {
       try {
         const result = await getTrendingGames();
 
-        const loadedGames: Game[] = result.data.listGames.content.map((game: any) => ({
-          uuid: game.gameProfileUUID,
+        const loadedGames: GameCardData[] = result.data.listGames.content.map((game: any) => ({
+          id: game.gameProfileUUID,
           gameProfileUUID: game.gameProfileUUID, // if your GameCard expects this
           title: game.title,
           dev: "",
