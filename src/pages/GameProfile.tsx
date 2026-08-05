@@ -14,24 +14,34 @@ const GameProfile: React.FC = () => {
   useEffect(() => {
     if (!uuid) return;
 
+    setLoading(true);
     getGameProfile(uuid)
       .then((res) => {
-        setGame(res.data);
-        setLoading(false);
+        // Log this to your console to see exactly what is coming back!
+        console.log("API Response in Component:", res);
+
+        if (res && res.data) {
+          setGame(res.data);
+        } else {
+          setError("Game data structure is invalid.");
+        }
       })
       .catch((err) => {
-        setError(err.message);
+        console.error("Fetch Error:", err);
+        setError(err.response || "Failed to connect to the Citadel.");
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, [uuid]);
 
-  if (loading) return <div className="loading-screen">Synchronizing with Citadel...</div>;
+  if (loading) return <div className="loading-screen">Loading Game...</div>;
   if (error || !game) return <div className="error-screen">Error: {error || 'Game not found'}</div>;
 
   return (
     <div className="game-profile-container">
       {/* 1. Playable Section */}
-      {game.gameType === "HTML5" && game.gameFiles.browserGameURL ? (
+      {game.gameType === "HTML5" && game.gameFiles?.browserGameURL ? (
         <section className="game-player-section">
           <div className="iframe-wrapper">
             <iframe
@@ -42,15 +52,18 @@ const GameProfile: React.FC = () => {
           </div>
         </section>
       ) : (
-        <div className="game-banner-fallback" style={{ backgroundImage: `url(${game.gameImages.coverImages})` }}>
+        /* Using Optional Chaining ?. to prevent the 'gameImages' error */
+        <div 
+          className="game-banner-fallback" 
+          style={{ backgroundImage: `url(${game.gameImages?.coverImages})` }}
+        >
           <div className="banner-overlay">
             <h1>{game.title}</h1>
-            <p>This game is available for download below.</p>
+            <p>Direct download available below.</p>
           </div>
         </div>
       )}
 
-      {/* 2. Content Section */}
       <main className="game-details-layout">
         <div className="game-main-info">
           <div className="header-row">
@@ -63,21 +76,24 @@ const GameProfile: React.FC = () => {
           <div className="screenshot-gallery">
             <h3>Screenshots</h3>
             <div className="gallery-grid">
-              {game.gameImages.gameImages.map((img, idx) => (
+              {/* Added ?. check for the screenshots array */}
+              {game.gameImages?.gameImages?.map((img, idx) => (
                 <img key={idx} src={img} alt={`${game.title} screenshot ${idx}`} />
               ))}
             </div>
           </div>
         </div>
 
-        {/* 3. Sidebar */}
         <aside className="game-sidebar">
           <div className="sidebar-card">
             <h3>Downloads</h3>
             <div className="download-list">
-              {game.gameFiles.files.map((file, idx) => (
-                <a key={idx} href={file.fileURL} className="download-item">
-                  <Button variant="secondary">Download for {file.filename.split('-').pop()?.split('.')[0]}</Button>
+              {/* Added ?. check for the files array */}
+              {game.gameFiles?.files?.map((file, idx) => (
+                <a key={idx} href={file.fileURL} className="download-item" target="_blank" rel="noreferrer">
+                  <Button variant="secondary">
+                    {file.filename.split('-').pop()?.split('.')[0] || "Download"}
+                  </Button>
                 </a>
               ))}
             </div>
@@ -90,11 +106,11 @@ const GameProfile: React.FC = () => {
             </div>
             <div className="meta-item">
               <span>Platform</span>
-              <span className="teal-text">{game.platformOS.join(', ')}</span>
+              <span className="teal-text">{game.platformOS?.join(', ')}</span>
             </div>
             <div className="meta-item">
               <span>Released</span>
-              <span>{new Date(game.createdDtm).toLocaleDateString()}</span>
+              <span>{game.createdDtm ? new Date(game.createdDtm).toLocaleDateString() : 'N/A'}</span>
             </div>
           </div>
         </aside>
