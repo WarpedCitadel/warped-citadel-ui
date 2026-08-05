@@ -1,0 +1,122 @@
+.game-profile-container {
+  background-color: var(--bg-dark);
+  min-height: 100vh;
+}
+
+/* Player Section */
+.game-player-section {
+  background: #000;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  border-bottom: 2px solid var(--teal-dim);
+}
+
+.iframe-wrapper {
+  width: 90%;
+  max-width: 1000px;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+  border: 1px solid var(--teal-dim);
+}
+
+.iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Layout */
+.game-details-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 5%;
+}
+
+.header-row h1 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.dev-name {
+  color: var(--teal-glow);
+  margin-top: 5px;
+}
+
+.dev-name a {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.game-description {
+  margin: 30px 0;
+  line-height: 1.8;
+  color: var(--text-main);
+  font-size: 1.1rem;
+}
+
+/* Gallery */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #333;
+  transition: transform 0.3s ease;
+}
+
+.gallery-grid img:hover {
+  transform: scale(1.05);
+  border-color: var(--teal-glow);
+}
+
+/* Sidebar */
+.sidebar-card {
+  background: var(--bg-surface);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(0, 242, 255, 0.1);
+}
+
+.download-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.meta-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+  font-size: 0.9rem;
+}
+
+.meta-item:last-child {
+  border-bottom: none;
+}
+
+.loading-screen {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--teal-glow);
+  font-family: monospace;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .game-details-layout {
+    grid-template-columns: 1fr;
+  }
+}
