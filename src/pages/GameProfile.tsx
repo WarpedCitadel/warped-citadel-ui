@@ -35,8 +35,25 @@ const GameProfile: React.FC = () => {
       });
   }, [uuid]);
 
-  if (loading) return <div className="loading-screen">Loading Game...</div>;
-  if (error || !game) return <div className="error-screen">Error: {error || 'Game not found'}</div>;
+  if (loading) {
+    return (
+      <div className="game-profile-container">
+        <div className="error-pill">
+          Loading game...
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !game) {
+    return (
+      <div className="game-profile-container">
+        <div className="error-pill">
+          {error || 'Game profile not found.'}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="game-profile-container">
