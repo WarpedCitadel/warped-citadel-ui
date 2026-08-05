@@ -51,3 +51,39 @@ export interface UserProfile {
   bio: string;
   pfp: string;
 }
+
+//GAME PROFILE PAGE
+
+export interface GameFile {
+  filename: string;
+  platformOS: number;
+  fileURL: string;
+}
+
+export interface GameProfileData {
+  gameProfileUUID: string;
+  title: string;
+  description: string;
+  genreType: string;
+  gameType: string;
+  platformOS: string[];
+  createdDtm: string;
+  gameImages: {
+    coverImages: string;
+    gameImages: string[];
+  };
+  gameFiles: {
+    browserGameURL?: string;
+    files: GameFile[];
+  };
+  displayName: string;
+  userUUID: string;
+}
+
+export interface GameProfileResponse {
+  title: string;
+  status: number;
+  data: GameProfileData;
+  instance: string;
+  timestamp: string;
+}
