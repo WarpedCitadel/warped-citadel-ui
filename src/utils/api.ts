@@ -1,4 +1,4 @@
-import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse } from '../types';
+import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse, GameProfileResponse } from '../types';
 
 const API_BASE_URL = 'http://localhost:8083';
 const USER_MANAGEMENT_URL = 'http://localhost:8080';
@@ -149,4 +149,12 @@ export const getTrendingGames = async () => {
   }
 
   return result;
+};
+
+export const getGameProfile = async (uuid: string): Promise<GameProfileResponse> => {
+  const response = await fetch(`${CONTENT_MANAGEMENT_URL}/getGameProfile/${uuid}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch game profile');
+  }
+  return response.json();
 };
