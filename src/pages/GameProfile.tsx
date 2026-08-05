@@ -72,7 +72,7 @@ const GameProfile: React.FC = () => {
         /* Using Optional Chaining ?. to prevent the 'gameImages' error */
         <div 
           className="game-banner-fallback" 
-          style={{ backgroundImage: `url(${game.gameImages?.coverImages})` }}
+          style={{ backgroundImage: `url(${game.images?.coverImages})` }}
         >
           <div className="banner-overlay">
             <h1>{game.title}</h1>
@@ -94,7 +94,7 @@ const GameProfile: React.FC = () => {
             <h3>Screenshots</h3>
             <div className="gallery-grid">
               {/* Added ?. check for the screenshots array */}
-              {game.gameImages?.gameImages?.map((img, idx) => (
+              {game.images?.gameImages?.map((img, idx) => (
                 <img key={idx} src={img} alt={`${game.title} screenshot ${idx}`} />
               ))}
             </div>

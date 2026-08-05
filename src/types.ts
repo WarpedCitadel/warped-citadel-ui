@@ -68,7 +68,7 @@ export interface GameProfileData {
   gameType: string;
   platformOS: string[];
   createdDtm: string;
-  gameImages: {
+  images: {
     coverImages: string;
     gameImages: string[];
   };
