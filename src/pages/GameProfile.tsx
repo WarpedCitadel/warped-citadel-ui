@@ -116,9 +116,22 @@ const GameProfile: React.FC = () => {
           </div>
         </section>
       )}
-
       <main className="game-content">
         <div className="game-main">
+          {game.gameType === "HTML5" && (
+            <section className="browser-game-info">
+              <h1>{game.title}</h1>
+
+              <p className="browser-game-dev">
+                By <Link to={`/user/${game.userUUID}`}>{game.displayName}</Link>
+              </p>
+
+              <p className="browser-game-description">
+                {game.description}
+              </p>
+            </section>
+          )}
+
           <section className="screenshots-section">
             <h2>Images</h2>
 
@@ -163,7 +176,7 @@ const GameProfile: React.FC = () => {
               <span>
                 {game.createdDtm
                   ? new Date(game.createdDtm).toLocaleDateString()
-                  : 'N/A'}
+                  : "N/A"}
               </span>
             </div>
 
@@ -187,8 +200,8 @@ const GameProfile: React.FC = () => {
                     rel="noreferrer"
                   >
                     <Button variant="secondary">
-                      {file.filename.split('-').pop()?.split('.')[0] ||
-                        'Download'}
+                      {file.filename.split("-").pop()?.split(".")[0] ||
+                        "Download"}
                     </Button>
                   </a>
                 ))}
