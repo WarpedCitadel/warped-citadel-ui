@@ -3,7 +3,17 @@ import { useParams, Link } from 'react-router-dom';
 import { getGameProfile } from '../utils/api';
 import type { GameProfileData } from '../types';
 import Button from '../components/UI/Button';
+import { FaWindows, FaLinux, FaApple, FaGlobe } from "react-icons/fa6"; 
+import type { IconType } from "react-icons";
 import '../styles/GameProfile.css';
+
+// Platform lookup table
+const PLATFORM_ICONS: Record<string, IconType> = {
+  W: FaWindows,
+  L: FaLinux,
+  M: FaApple,
+  B: FaGlobe,
+};
 
 const GameProfile: React.FC = () => {
   const { uuid } = useParams<{ uuid: string }>();
@@ -123,7 +133,20 @@ const GameProfile: React.FC = () => {
             </div>
             <div className="meta-item">
               <span>Platform</span>
-              <span className="teal-text">{game.platformOS?.join(', ')}</span>
+
+              <span className="teal-text platform-icons">
+                {game.platformOS?.map((platform) => {
+                  const Icon = PLATFORM_ICONS[platform];
+
+                  return Icon ? (
+                    <Icon
+                      key={platform}
+                      title={platform}
+                      aria-label={platform}
+                    />
+                  ) : null;
+                })}
+              </span>
             </div>
             <div className="meta-item">
               <span>Released</span>
