@@ -27,9 +27,6 @@ const GameProfile: React.FC = () => {
     setLoading(true);
     getGameProfile(uuid)
       .then((res) => {
-        // Log this to your console to see exactly what is coming back!
-        console.log("API Response in Component:", res);
-
         if (res && res.data) {
           setGame(res.data);
         } else {
@@ -79,80 +76,125 @@ const GameProfile: React.FC = () => {
           </div>
         </section>
       ) : (
-        /* Using Optional Chaining ?. to prevent the 'gameImages' error */
-        <div 
-          className="game-banner-fallback" 
-          style={{ backgroundImage: `url(${game.images?.coverImages})` }}
+        // 2. Downloadable Showcase Section
+        <section
+          className="game-showcase"
+          style={
+            {
+              '--showcase-image': `url(${game.images?.coverImages})`,
+            } as React.CSSProperties
+          }
         >
-          <div className="banner-overlay">
-            <h1>{game.title}</h1>
-            <p>Direct download available below.</p>
-          </div>
-        </div>
-      )}
+          <div className="game-showcase-content">
+            <div className="game-showcase-cover">
+              <img src={game.images?.coverImages} alt={game.title} />
+            </div>
 
-      <main className="game-details-layout">
-        <div className="game-main-info">
-          <div className="header-row">
-            <h1>{game.title}</h1>
-            <p className="dev-name">By <Link to={`/user/${game.userUUID}`}>{game.displayName}</Link></p>
-          </div>
+            <div className="game-showcase-info">
+              <h1>{game.title}</h1>
 
-          <p className="game-description">{game.description}</p>
+              <p className="game-showcase-dev">
+                By <Link to={`/user/${game.userUUID}`}>{game.displayName}</Link>
+              </p>
 
-          <div className="screenshot-gallery">
-            <h3>Screenshots</h3>
-            <div className="gallery-grid">
-              {/* Added ?. check for the screenshots array */}
-              {game.images?.gameImages?.map((img, idx) => (
-                <img key={idx} src={img} alt={`${game.title} screenshot ${idx}`} />
-              ))}
+              <p className="game-showcase-description">
+                {game.description}
+              </p>
+
+              <div className="game-showcase-actions">
+                {game.gameFiles?.files?.[0] && (
+                  <a
+                    href={game.gameFiles.files[0].fileURL}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button>Download</Button>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
+        </section>
+      )}
+
+      <main className="game-content">
+        <div className="game-main">
+          <section className="screenshots-section">
+            <h2>Images</h2>
+
+            {game.images?.gameImages?.length ? (
+              <div className="screenshots-grid">
+                {game.images.gameImages.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={`${game.title} screenshot ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="empty-gallery">No screenshots available.</p>
+            )}
+          </section>
         </div>
 
         <aside className="game-sidebar">
           <div className="sidebar-card">
-            <h3>Downloads</h3>
-            <div className="download-list">
-              {/* Added ?. check for the files array */}
-              {game.gameFiles?.files?.map((file, idx) => (
-                <a key={idx} href={file.fileURL} className="download-item" target="_blank" rel="noreferrer">
-                  <Button variant="secondary">
-                    {file.filename.split('-').pop()?.split('.')[0] || "Download"}
-                  </Button>
-                </a>
-              ))}
-            </div>
-          </div>
+            <h3>Game Information</h3>
 
-          <div className="sidebar-card metadata">
             <div className="meta-item">
               <span>Genre</span>
               <span className="teal-text">{game.genreType}</span>
             </div>
+
             <div className="meta-item">
               <span>Platform</span>
 
-              <span className="teal-text platform-icons">
+              <span className="platform-icons">
                 {game.platformOS?.map((platform) => {
                   const Icon = PLATFORM_ICONS[platform];
-
-                  return Icon ? (
-                    <Icon
-                      key={platform}
-                      title={platform}
-                      aria-label={platform}
-                    />
-                  ) : null;
+                  return Icon ? <Icon key={platform} /> : null;
                 })}
               </span>
             </div>
+
             <div className="meta-item">
               <span>Released</span>
-              <span>{game.createdDtm ? new Date(game.createdDtm).toLocaleDateString() : 'N/A'}</span>
+              <span>
+                {game.createdDtm
+                  ? new Date(game.createdDtm).toLocaleDateString()
+                  : 'N/A'}
+              </span>
+            </div>
+
+            <div className="meta-item">
+              <span>Type</span>
+              <span>{game.gameType}</span>
             </div>
           </div>
+
+          {game.gameFiles?.files?.length ? (
+            <div className="sidebar-card">
+              <h3>Downloads</h3>
+
+              <div className="download-list">
+                {game.gameFiles.files.map((file, idx) => (
+                  <a
+                    key={idx}
+                    href={file.fileURL}
+                    className="download-item"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button variant="secondary">
+                      {file.filename.split('-').pop()?.split('.')[0] ||
+                        'Download'}
+                    </Button>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </aside>
       </main>
     </div>
