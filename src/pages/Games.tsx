@@ -45,12 +45,27 @@ const PAGE_SIZES = [12, 24, 48];
 
 type SortOption = "trending" | "newest" | "alphabetical";
 
+interface GameFilters {
+    search: string;
+    sort: SortOption;
+    genre: string;
+    platform: string;
+    recent: string;
+    gameType: string;
+    pageSize: number;
+}
+
 const Games: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const [games, setGames] = useState<GameCardData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    /*
+     * =========================
+     * DRAFT FILTERS
+     * =========================
+     *
+     * These values change freely while the user interacts
+     * with the page. They do NOT trigger an API request.
+     */
 
     const [search, setSearch] = useState(
         searchParams.get("title") || ""
@@ -76,13 +91,48 @@ const Games: React.FC = () => {
         searchParams.get("type") || ""
     );
 
+    const [pageSize, setPageSize] = useState(
+        Number(searchParams.get("size") || 24)
+    );
+
+    /*
+     * =========================
+     * APPLIED FILTERS
+     * =========================
+     *
+     * These are the values actually being sent to the API.
+     * They only change when the user presses Search.
+     */
+
+    const [appliedFilters, setAppliedFilters] = useState<GameFilters>({
+        search: searchParams.get("title") || "",
+        sort: (searchParams.get("sort") as SortOption) || "trending",
+        genre: searchParams.get("genre") || "",
+        platform: searchParams.get("platform") || "",
+        recent: searchParams.get("recent") || "",
+        gameType: searchParams.get("type") || "",
+        pageSize: Number(searchParams.get("size") || 24),
+    });
+
     const [page, setPage] = useState(
         Number(searchParams.get("page") || 0)
     );
 
-    const [pageSize, setPageSize] = useState(
-        Number(searchParams.get("size") || 24)
-    );
+    const [games, setGames] = useState<GameCardData[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    /*
+     * =========================
+     * FETCH GAMES
+     * =========================
+     *
+     * This only runs when:
+     * - Search is submitted
+     * - User changes page
+     *
+     * Typing/search filter changes do NOT trigger this.
+     */
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -91,16 +141,30 @@ const Games: React.FC = () => {
 
             try {
                 const result = await getGamesPage({
-                    title: search || undefined,
-                    genre: genre ? Number(genre) : undefined,
-                    platformOS: platform ? Number(platform) : undefined,
-                    mostRecent: recent ? Number(recent) : undefined,
-                    gameType: gameType ? Number(gameType) : undefined,
+                    title: appliedFilters.search || undefined,
+
+                    genre: appliedFilters.genre
+                        ? Number(appliedFilters.genre)
+                        : undefined,
+
+                    platformOS: appliedFilters.platform
+                        ? Number(appliedFilters.platform)
+                        : undefined,
+
+                    mostRecent: appliedFilters.recent
+                        ? Number(appliedFilters.recent)
+                        : undefined,
+
+                    gameType: appliedFilters.gameType
+                        ? Number(appliedFilters.gameType)
+                        : undefined,
+
                     page,
-                    size: pageSize,
+                    size: appliedFilters.pageSize,
                 });
 
-                const content = result?.data?.listGames?.content ?? [];
+                const content =
+                    result?.data?.listGames?.content ?? [];
 
                 const formattedGames: GameCardData[] = content.map(
                     (game: any) => ({
@@ -113,9 +177,11 @@ const Games: React.FC = () => {
                     })
                 );
 
-                // Alphabetical sorting is done client-side because
-                // the current API doesn't expose a sort parameter.
-                if (sort === "alphabetical") {
+                /*
+                 * The API currently doesn't expose a sort parameter,
+                 * so alphabetical sorting is handled client-side.
+                 */
+                if (appliedFilters.sort === "alphabetical") {
                     formattedGames.sort((a, b) =>
                         a.title.localeCompare(b.title)
                     );
@@ -131,20 +197,35 @@ const Games: React.FC = () => {
         };
 
         fetchGames();
-    }, [
-        search,
-        genre,
-        platform,
-        recent,
-        gameType,
-        page,
-        pageSize,
-        sort,
-    ]);
+    }, [appliedFilters, page]);
 
-    const updateFilters = (
-        updates: Record<string, string>
-    ) => {
+    /*
+     * =========================
+     * SEARCH / APPLY FILTERS
+     * =========================
+     */
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Apply all current selections at once
+        setAppliedFilters({
+            search,
+            sort,
+            genre,
+            platform,
+            recent,
+            gameType,
+            pageSize,
+        });
+
+        // Always return to the first page after a new search/filter
+        setPage(0);
+
+        /*
+         * Update URL only when the search is submitted.
+         * This also means we can share/bookmark the current search.
+         */
         const params: Record<string, string> = {
             title: search,
             sort,
@@ -152,9 +233,8 @@ const Games: React.FC = () => {
             platform,
             recent,
             type: gameType,
-            page: page.toString(),
+            page: "0",
             size: pageSize.toString(),
-            ...updates,
         };
 
         Object.keys(params).forEach((key) => {
@@ -166,105 +246,82 @@ const Games: React.FC = () => {
         setSearchParams(params);
     };
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        setPage(0);
-
-        updateFilters({
-            title: search,
-            page: "0",
-        });
-    };
+    /*
+     * =========================
+     * FILTER CONTROLS
+     * =========================
+     *
+     * These ONLY update the draft values.
+     * No API call happens here.
+     */
 
     const handleSortChange = (value: SortOption) => {
         setSort(value);
-        setPage(0);
-
-        updateFilters({
-            sort: value,
-            page: "0",
-        });
     };
 
     const handleGenreChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
-        const value = e.target.value;
-
-        setGenre(value);
-        setPage(0);
-
-        updateFilters({
-            genre: value,
-            page: "0",
-        });
+        setGenre(e.target.value);
     };
 
     const handlePlatformChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
-        const value = e.target.value;
-
-        setPlatform(value);
-        setPage(0);
-
-        updateFilters({
-            platform: value,
-            page: "0",
-        });
+        setPlatform(e.target.value);
     };
 
     const handleRecentChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
-        const value = e.target.value;
-
-        setRecent(value);
-        setPage(0);
-
-        updateFilters({
-            recent: value,
-            page: "0",
-        });
+        setRecent(e.target.value);
     };
 
     const handleGameTypeChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
-        const value = e.target.value;
-
-        setGameType(value);
-        setPage(0);
-
-        updateFilters({
-            type: value,
-            page: "0",
-        });
+        setGameType(e.target.value);
     };
 
     const handlePageSizeChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
-        const value = Number(e.target.value);
-
-        setPageSize(value);
-        setPage(0);
-
-        updateFilters({
-            size: value.toString(),
-            page: "0",
-        });
+        setPageSize(Number(e.target.value));
     };
+
+    /*
+     * =========================
+     * PAGINATION
+     * =========================
+     *
+     * Pagination DOES immediately request another page.
+     * This is intentional because the user explicitly asked
+     * to navigate to another page of results.
+     */
 
     const goToPage = (newPage: number) => {
         if (newPage < 0) return;
 
         setPage(newPage);
 
-        updateFilters({
+        const params: Record<string, string> = {
+            title: appliedFilters.search,
+            sort: appliedFilters.sort,
+            genre: appliedFilters.genre,
+            platform: appliedFilters.platform,
+            recent: appliedFilters.recent,
+            type: appliedFilters.gameType,
             page: newPage.toString(),
+            size: appliedFilters.pageSize.toString(),
+        };
+
+        Object.keys(params).forEach((key) => {
+            if (!params[key]) {
+                delete params[key];
+            }
         });
+
+        setSearchParams(params);
 
         window.scrollTo({
             top: 0,
@@ -272,7 +329,8 @@ const Games: React.FC = () => {
         });
     };
 
-    const hasNextPage = games.length === pageSize;
+    const hasNextPage =
+        games.length === appliedFilters.pageSize;
 
     return (
         <div className="games-page">
@@ -284,6 +342,10 @@ const Games: React.FC = () => {
                         Discover games from the Warped Citadel.
                     </p>
                 </header>
+
+                {/* =========================
+            FILTERS
+            ========================= */}
 
                 <section className="games-filters">
 
@@ -298,7 +360,10 @@ const Games: React.FC = () => {
                             onChange={(e) => setSearch(e.target.value)}
                         />
 
-                        <button type="submit" aria-label="Search">
+                        <button
+                            type="submit"
+                            aria-label="Search"
+                        >
                             <FaMagnifyingGlass />
                         </button>
                     </form>
@@ -307,6 +372,7 @@ const Games: React.FC = () => {
 
                         <label>
                             <span>Genre</span>
+
                             <select
                                 value={genre}
                                 onChange={handleGenreChange}
@@ -324,6 +390,7 @@ const Games: React.FC = () => {
 
                         <label>
                             <span>Platform</span>
+
                             <select
                                 value={platform}
                                 onChange={handlePlatformChange}
@@ -341,6 +408,7 @@ const Games: React.FC = () => {
 
                         <label>
                             <span>Added</span>
+
                             <select
                                 value={recent}
                                 onChange={handleRecentChange}
@@ -358,6 +426,7 @@ const Games: React.FC = () => {
 
                         <label>
                             <span>Type</span>
+
                             <select
                                 value={gameType}
                                 onChange={handleGameTypeChange}
@@ -376,46 +445,81 @@ const Games: React.FC = () => {
                     </div>
                 </section>
 
-                {/* Sorting */}
+                {/* =========================
+            SORTING + PAGE SIZE
+            ========================= */}
+
                 <section className="games-sort">
-                    <div className="sort-options">
-                        <span className="games-sort-label">Sort by:</span>
 
-                        <button
-                            className={sort === "trending" ? "active" : ""}
-                            onClick={() => handleSortChange("trending")}
-                        >
-                            Trending
-                        </button>
+                    <div className="sort-section">
 
-                        <button
-                            className={sort === "newest" ? "active" : ""}
-                            onClick={() => handleSortChange("newest")}
-                        >
-                            Newest
-                        </button>
+                        <div className="sort-options">
+                            <span className="games-sort-label">Sort by:</span>
 
-                        <button
-                            className={sort === "alphabetical" ? "active" : ""}
-                            onClick={() => handleSortChange("alphabetical")}
-                        >
-                            A-Z
-                        </button>
+                            <button
+                                type="button"
+                                className={
+                                    sort === "trending"
+                                        ? "active"
+                                        : ""
+                                }
+                                onClick={() =>
+                                    handleSortChange("trending")
+                                }
+                            >
+                                Trending
+                            </button>
+
+                            <button
+                                type="button"
+                                className={
+                                    sort === "newest"
+                                        ? "active"
+                                        : ""
+                                }
+                                onClick={() =>
+                                    handleSortChange("newest")
+                                }
+                            >
+                                Newest
+                            </button>
+
+                            <button
+                                type="button"
+                                className={
+                                    sort === "alphabetical"
+                                        ? "active"
+                                        : ""
+                                }
+                                onClick={() =>
+                                    handleSortChange("alphabetical")
+                                }
+                            >
+                                A-Z
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="games-page-size">
+                    <label className="games-page-size">
+                        <span>Games per page</span>
+
                         <select
                             value={pageSize}
                             onChange={handlePageSizeChange}
                         >
                             {PAGE_SIZES.map((size) => (
                                 <option key={size} value={size}>
-                                    {size} per page
+                                    {size}
                                 </option>
                             ))}
                         </select>
-                    </div>
+                    </label>
+
                 </section>
+
+                {/* =========================
+            RESULTS
+            ========================= */}
 
                 {loading ? (
                     <div className="games-status">
@@ -448,11 +552,18 @@ const Games: React.FC = () => {
                     </section>
                 )}
 
+                {/* =========================
+            PAGINATION
+            ========================= */}
+
                 {!loading && games.length > 0 && (
                     <div className="games-pagination">
+
                         <button
                             disabled={page === 0}
-                            onClick={() => goToPage(page - 1)}
+                            onClick={() =>
+                                goToPage(page - 1)
+                            }
                         >
                             ← Previous
                         </button>
@@ -463,10 +574,13 @@ const Games: React.FC = () => {
 
                         <button
                             disabled={!hasNextPage}
-                            onClick={() => goToPage(page + 1)}
+                            onClick={() =>
+                                goToPage(page + 1)
+                            }
                         >
                             Next →
                         </button>
+
                     </div>
                 )}
 
