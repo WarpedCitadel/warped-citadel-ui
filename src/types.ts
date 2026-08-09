@@ -87,3 +87,13 @@ export interface GameProfileResponse {
   instance: string;
   timestamp: string;
 }
+
+export interface GamesPageParams {
+  title?: string;
+  genre?: number;
+  platformOS?: number;
+  mostRecent?: number;
+  gameType?: number;
+  page?: number;
+  size?: number;
+}
