@@ -306,24 +306,6 @@ const Games: React.FC = () => {
           <div className="filter-row">
 
             <label>
-              <span>Sort</span>
-              <select
-                value={sort}
-                onChange={(e) =>
-                  handleSortChange(
-                    e.target.value as SortOption
-                  )
-                }
-              >
-                <option value="trending">Trending</option>
-                <option value="newest">Newest</option>
-                <option value="alphabetical">
-                  Alphabetical
-                </option>
-              </select>
-            </label>
-
-            <label>
               <span>Genre</span>
               <select
                 value={genre}
@@ -358,55 +340,82 @@ const Games: React.FC = () => {
             </label>
 
             <label>
-              <span>Added</span>
-              <select
+            <span>Added</span>
+            <select
                 value={recent}
                 onChange={handleRecentChange}
-              >
+            >
                 {RECENT_OPTIONS.map((option) => (
-                  <option
+                <option
                     key={option.value}
                     value={option.value}
-                  >
+                >
                     {option.label}
-                  </option>
+                </option>
                 ))}
-              </select>
+            </select>
             </label>
 
             <label>
-              <span>Type</span>
-              <select
+            <span>Type</span>
+            <select
                 value={gameType}
                 onChange={handleGameTypeChange}
-              >
+            >
                 {GAME_TYPES.map((option) => (
-                  <option
+                <option
                     key={option.value}
                     value={option.value}
-                  >
+                >
                     {option.label}
-                  </option>
+                </option>
                 ))}
-              </select>
+            </select>
             </label>
 
-            <label>
-              <span>Games per page</span>
-              <select
+        </div>
+        </section>
+
+        {/* Sorting */}
+        <section className="games-sort">
+            <div className="sort-options">
+                <span className="games-sort-label">Sort by:</span>
+
+                <button
+                className={sort === "trending" ? "active" : ""}
+                onClick={() => handleSortChange("trending")}
+                >
+                Trending
+                </button>
+
+                <button
+                className={sort === "newest" ? "active" : ""}
+                onClick={() => handleSortChange("newest")}
+                >
+                Newest
+                </button>
+
+                <button
+                className={sort === "alphabetical" ? "active" : ""}
+                onClick={() => handleSortChange("alphabetical")}
+                >
+                A-Z
+                </button>
+            </div>
+
+            <div className="games-page-size">
+                <select
                 value={pageSize}
                 onChange={handlePageSizeChange}
-              >
+                >
                 {PAGE_SIZES.map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
+                    <option key={size} value={size}>
+                    {size} per page
+                    </option>
                 ))}
-              </select>
-            </label>
-
-          </div>
-        </section>
+                </select>
+            </div>
+            </section>
 
         {loading ? (
           <div className="games-status">
