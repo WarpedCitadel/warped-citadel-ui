@@ -2,12 +2,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   padding: 1rem 5%;
-  background: var(--navbar-bg);
+
+  background: rgba(15, 15, 15, 0.95);
   border-bottom: 1px solid var(--teal-dim);
+
   position: sticky;
   top: 0;
   z-index: 1000;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav-logo {
@@ -16,7 +25,7 @@
   letter-spacing: 2px;
   cursor: pointer;
   user-select: none;
-  text-decoration: none; 
+  text-decoration: none;
   color: var(--text-main);
 }
 
@@ -25,9 +34,172 @@
   text-shadow: 0 0 10px var(--teal-dim);
 }
 
+.browse-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 1rem;
+
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.browse-link:hover {
+  color: var(--teal-glow);
+  text-shadow: 0 0 8px var(--teal-dim);
+}
+
+.navbar-search {
+  display: flex;
+  align-items: center;
+
+  width: 260px;
+  height: 36px;
+
+  background: rgba(25, 25, 25, 0.9);
+  border: 1px solid var(--teal-dim);
+  border-radius: 6px;
+
+  overflow: hidden;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.navbar-search:focus-within {
+  border-color: var(--teal-glow);
+  box-shadow: 0 0 10px var(--teal-dim);
+}
+
+.navbar-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+
+  padding: 0 0.75rem;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.navbar-search input::placeholder {
+  color: var(--text-dim);
+}
+
+.navbar-search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 100%;
+
+  padding: 0;
+
+  background: transparent;
+  border: none;
+
+  color: var(--text-dim);
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    text-shadow 0.2s ease;
+}
+
+.navbar-search button:hover {
+  color: var(--teal-glow);
+  text-shadow: 0 0 8px var(--teal-glow);
+}
+
 .nav-links {
   display: flex;
   align-items: center;
+}
+
+.teal-text {
+  color: var(--teal-glow);
+  text-shadow: 0 0 10px var(--teal-dim);
+}
+
+.browse-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.browse-link:hover {
+  color: var(--teal-glow);
+  text-shadow: 0 0 8px var(--teal-dim);
+}
+
+.navbar-search {
+  display: flex;
+  align-items: center;
+
+  width: 220px;
+  height: 36px;
+
+  background: rgba(25, 25, 25, 0.9);
+  border: 1px solid var(--teal-dim);
+  border-radius: 6px;
+
+  overflow: hidden;
+
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.navbar-search:focus-within {
+  border-color: var(--teal-glow);
+  box-shadow: 0 0 10px var(--teal-dim);
+}
+
+.navbar-search input {
+  flex: 1;
+
+  min-width: 0;
+  height: 100%;
+
+  padding: 0 0.75rem;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+.navbar-search input::placeholder {
+  color: var(--text-dim);
+}
+
+.navbar-search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 100%;
+
+  padding: 0;
+
+  background: transparent;
+  border: none;
+
+  color: var(--text-dim);
+  cursor: pointer;
+
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.navbar-search button:hover {
+  color: var(--teal-glow);
+  text-shadow: 0 0 8px var(--teal-glow);
 }
 
 .profile-menu {

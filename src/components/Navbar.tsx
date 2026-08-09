@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaMagnifyingGlass } from "react-icons/fa6";
 import '../styles/Navbar.css';
 import Button from './UI/Button';
 
@@ -8,6 +9,7 @@ const Navbar: React.FC = () => {
 
   const displayName = localStorage.getItem("displayName");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("jwt");
@@ -18,12 +20,46 @@ const Navbar: React.FC = () => {
     window.location.reload();
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const query = searchQuery.trim();
+
+    if (query) {
+      navigate(`/games?query=${encodeURIComponent(query)}`);
+    } else {
+      navigate("/games");
+    }
+  };
+
   return (
     <nav className="navbar">
-      <Link to="/" className="nav-logo">
-        <span className="teal-text">WARPED</span>CITADEL
-      </Link>
 
+      {/* Left side */}
+      <div className="navbar-left">
+        <Link to="/" className="nav-logo">
+          <span className="teal-text">WARPED</span>CITADEL
+        </Link>
+
+        <Link to="/games" className="browse-link">
+          Browse
+        </Link>
+
+        <form className="navbar-search" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Search games..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          <button type="submit" aria-label="Search">
+            <FaMagnifyingGlass />
+          </button>
+        </form>
+      </div>
+
+      {/* Right side */}
       <div className="nav-links">
         {displayName ? (
           <div className="profile-menu">
@@ -33,7 +69,6 @@ const Navbar: React.FC = () => {
             >
               <span>{displayName}</span>
 
-              {/* modern drop down arrow */}
               <svg
                 className={`dropdown-arrow ${menuOpen ? "open" : ""}`}
                 xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +88,7 @@ const Navbar: React.FC = () => {
             {menuOpen && (
               <div className="dropdown-menu">
                 <Link
-                  to={`/user/${localStorage.getItem("displayName")}`}
+                  to={`/user/${displayName}`}
                   className="dropdown-item"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -75,6 +110,7 @@ const Navbar: React.FC = () => {
           </Link>
         )}
       </div>
+
     </nav>
   );
 };
