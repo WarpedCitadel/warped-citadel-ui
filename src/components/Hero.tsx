@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { GameCardData } from '../types';
 import '../styles/Hero.css';
 import Button from './UI/Button';
@@ -9,6 +10,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ games }) => {
   const [index, setIndex] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (games.length === 0) return;
@@ -27,12 +29,6 @@ const Hero: React.FC<HeroProps> = ({ games }) => {
   const currentGame = games[index];
 
   return (
-    // <section 
-    //   className="hero" 
-    //   style={{ 
-    //     backgroundImage: `linear-gradient(to right, #0f0f0f, transparent), url(${currentGame.image})` 
-    //   }}
-    // >
     <section
       className="hero"
       style={
@@ -45,7 +41,14 @@ const Hero: React.FC<HeroProps> = ({ games }) => {
         <span className="trending-badge">TRENDING NOW</span>
         <h1>{currentGame.title}</h1>
         <p>{currentGame.description}</p>
-        <Button>Play Now</Button>
+
+        <Button
+          onClick={() =>
+            navigate(`/gameProfile/${currentGame.gameProfileUUID}`)
+          }
+        >
+          Play Now
+        </Button>
       </div>
     </section>
   );
