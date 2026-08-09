@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import GameProfile from './pages/GameProfile';
 import './App.css';
 import Profile from './pages/UserProfile';
+import Games from './pages/Games';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/signup/activate" element={<Activate />} />
          <Route path="/gameProfile/:uuid" element={<GameProfile />} />
          <Route path="/user/:username" element={<Profile />} /> 
+         <Route path="/games" element={<Games />} />
          <Route path="*" element={<div className="error-pill">Page Not Found</div>} />
       </Routes>
     </div>

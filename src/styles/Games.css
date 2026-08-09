@@ -1,0 +1,254 @@
+.games-page {
+  min-height: 100vh;
+  background: var(--bg-dark);
+}
+
+.games-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 50px 5% 80px;
+}
+
+/* Header */
+
+.games-header {
+  margin-bottom: 35px;
+}
+
+.games-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+}
+
+.games-header p {
+  margin: 8px 0 0;
+  color: var(--text-dim);
+}
+
+/* Filters */
+
+.games-filters {
+  background: var(--bg-surface);
+  border: 1px solid rgba(0, 242, 255, 0.12);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 40px;
+}
+
+.games-search {
+  display: flex;
+  width: 100%;
+  height: 46px;
+
+  background: var(--bg-dark);
+  border: 1px solid var(--teal-dim);
+  border-radius: 6px;
+
+  overflow: hidden;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.games-search:focus-within {
+  border-color: var(--teal-glow);
+  box-shadow: 0 0 12px var(--teal-dim);
+}
+
+.games-search input {
+  flex: 1;
+  min-width: 0;
+
+  padding: 0 15px;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: var(--text-main);
+  font-size: 1rem;
+}
+
+.games-search input::placeholder {
+  color: var(--text-dim);
+}
+
+.games-search button {
+  width: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: none;
+
+  color: var(--text-dim);
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    text-shadow 0.2s ease;
+}
+
+.games-search button:hover {
+  color: var(--teal-glow);
+  text-shadow: 0 0 8px var(--teal-glow);
+}
+
+/* Filter row */
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.filter-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-row select {
+  width: 100%;
+  height: 38px;
+
+  padding: 0 10px;
+
+  background: var(--bg-dark);
+  border: 1px solid rgba(0, 242, 255, 0.15);
+  border-radius: 5px;
+
+  color: var(--text-main);
+  outline: none;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.filter-row select:hover,
+.filter-row select:focus {
+  border-color: var(--teal-dim);
+}
+
+.filter-row select:focus {
+  box-shadow: 0 0 8px rgba(0, 242, 255, 0.1);
+}
+
+/* Games */
+
+.games-results {
+  width: 100%;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* Loading / error */
+
+.games-status {
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+}
+
+/* Pagination */
+
+.games-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+
+  margin-top: 45px;
+}
+
+.games-pagination button {
+  padding: 8px 15px;
+
+  background: var(--bg-surface);
+  border: 1px solid var(--teal-dim);
+  border-radius: 5px;
+
+  color: var(--text-main);
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.games-pagination button:hover:not(:disabled) {
+  color: var(--teal-glow);
+  border-color: var(--teal-glow);
+  box-shadow: 0 0 10px rgba(0, 242, 255, 0.12);
+}
+
+.games-pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.games-pagination span {
+  color: var(--text-dim);
+  font-family: monospace;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+  .games-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .filter-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 750px) {
+  .games-container {
+    padding-top: 30px;
+  }
+
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filter-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .games-header h1 {
+    font-size: 2rem;
+  }
+}
