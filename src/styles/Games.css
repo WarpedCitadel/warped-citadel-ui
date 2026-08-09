@@ -106,6 +106,10 @@
     text-shadow 0.2s ease;
 }
 
+.games-search button svg {
+  font-size: 1.5em;
+}
+
 .games-search button:hover {
   color: var(--teal-glow);
   text-shadow: 0 0 8px var(--teal-glow);
