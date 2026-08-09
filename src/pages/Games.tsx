@@ -53,7 +53,7 @@ const Games: React.FC = () => {
   const [error, setError] = useState("");
 
   const [search, setSearch] = useState(
-    searchParams.get("query") || ""
+    searchParams.get("title") || ""
   );
 
   const [sort, setSort] = useState<SortOption>(
@@ -146,7 +146,7 @@ const Games: React.FC = () => {
     updates: Record<string, string>
   ) => {
     const params: Record<string, string> = {
-      query: search,
+      title: search,
       sort,
       genre,
       platform,
@@ -172,7 +172,7 @@ const Games: React.FC = () => {
     setPage(0);
 
     updateFilters({
-      query: search,
+      title: search,
       page: "0",
     });
   };
