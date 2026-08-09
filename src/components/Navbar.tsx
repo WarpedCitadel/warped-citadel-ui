@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
     const query = searchQuery.trim();
 
     if (query) {
-      navigate(`/games?query=${encodeURIComponent(query)}`);
+      navigate(`/games?title=${encodeURIComponent(query)}`);
     } else {
       navigate("/games");
     }
