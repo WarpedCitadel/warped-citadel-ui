@@ -1,4 +1,4 @@
-import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse, GameProfileResponse } from '../types';
+import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse, GameProfileResponse, GamesPageParams } from '../types';
 
 const API_BASE_URL = 'http://localhost:8083';
 const USER_MANAGEMENT_URL = 'http://localhost:8080';
@@ -136,6 +136,61 @@ export const getTrendingGames = async () => {
       method: "GET",
       headers: {
         "Content-Type":"application/json",
+        "Accept": "application/json",
+        "x-api-version": "1.0",
+      },
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw result;
+  }
+
+  return result;
+};
+
+export const getGamesPage = async (
+  params: GamesPageParams = {}
+) => {
+  const queryParams = new URLSearchParams();
+
+  if (params.title) {
+    queryParams.append("title", params.title);
+  }
+
+  if (params.genre !== undefined) {
+    queryParams.append("genre", params.genre.toString());
+  }
+
+  if (params.platformOS !== undefined) {
+    queryParams.append("platformOS", params.platformOS.toString());
+  }
+
+  if (params.mostRecent !== undefined) {
+    queryParams.append("mostRecent", params.mostRecent.toString());
+  }
+
+  queryParams.append(
+    "page",
+    (params.page ?? 0).toString()
+  );
+
+  queryParams.append(
+    "size",
+    (params.size ?? 24).toString()
+  );
+
+  if (params.gameType !== undefined) {
+    queryParams.append("gameType", params.gameType.toString());
+  }
+
+  const response = await fetch(
+    `${CONTENT_MANAGEMENT_URL}/api/main/GetTrendingGames?${queryParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
         "Accept": "application/json",
         "x-api-version": "1.0",
       },
