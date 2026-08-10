@@ -123,6 +123,30 @@ const Games: React.FC = () => {
     const [error, setError] = useState("");
 
     /*
+    * =========================
+    * SYNC URL SEARCH
+    * =========================
+    *
+    * Keeps the Games page search in sync when the
+    * navbar changes ?title= while already on /games.
+    */
+
+    useEffect(() => {
+        const urlSearch = searchParams.get("title") || "";
+
+        if (urlSearch !== appliedFilters.search) {
+            setSearch(urlSearch);
+
+            setAppliedFilters((current) => ({
+                ...current,
+                search: urlSearch,
+            }));
+
+            setPage(0);
+        }
+    }, [searchParams]);
+
+    /*
      * =========================
      * FETCH GAMES
      * =========================
