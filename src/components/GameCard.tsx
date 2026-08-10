@@ -21,7 +21,7 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
         className="card-img"
         style={
           {
-            "--card-image": `url(${game.image})`,
+            "--card-image": `url(${game.image || "/gamedefault.png"})`,
           } as React.CSSProperties
         }
       />
