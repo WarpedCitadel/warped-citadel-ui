@@ -1,0 +1,153 @@
+.home-page {
+    width: 100%;
+}
+
+.content {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 32px 60px;
+    box-sizing: border-box;
+}
+
+.section-group {
+    width: 100%;
+    margin-bottom: 48px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    margin: 0;
+}
+
+
+/* =========================
+   GAME GRID
+   ========================= */
+
+.game-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+}
+
+/*
+ * Only show the first row.
+ * Home.tsx provides up to 5 games, so this
+ * prevents anything from creating another row.
+ */
+.game-grid > * {
+    min-width: 0;
+}
+
+.game-grid > :nth-child(n + 6) {
+    display: none;
+}
+
+
+/* =========================
+   VIEW MORE
+   ========================= */
+
+.view-more-button {
+    background: none;
+    border: none;
+    padding: 0;
+
+    color: var(--text-dim);
+    font: inherit;
+    cursor: pointer;
+
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+
+    transition:
+        color 0.2s ease,
+        text-decoration-color 0.2s ease;
+}
+
+.view-more-button:hover {
+    color: var(--teal-glow);
+    text-decoration-color: var(--teal-glow);
+}
+
+
+/* =========================
+   STATUS
+   ========================= */
+
+.home-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+/* 4 games */
+@media (max-width: 1250px) {
+    .game-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .game-grid > :nth-child(n + 5) {
+        display: none;
+    }
+}
+
+
+/* 3 games */
+@media (max-width: 950px) {
+    .game-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .game-grid > :nth-child(n + 4) {
+        display: none;
+    }
+}
+
+
+/* 2 games */
+@media (max-width: 700px) {
+    .content {
+        padding: 0 20px 40px;
+    }
+
+    .game-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .game-grid > :nth-child(n + 3) {
+        display: none;
+    }
+}
+
+
+/* 1 game */
+@media (max-width: 480px) {
+    .game-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .game-grid > :nth-child(n + 2) {
+        display: none;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
