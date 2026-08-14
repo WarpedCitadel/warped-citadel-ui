@@ -33,7 +33,7 @@ const Hero: React.FC<HeroProps> = ({ games }) => {
       className="hero"
       style={
         {
-          "--hero-image": `url(${currentGame.image})`,
+          "--hero-image": `url(${currentGame.image || "/gamedefault.png"})`,
         } as React.CSSProperties
       }
     >
