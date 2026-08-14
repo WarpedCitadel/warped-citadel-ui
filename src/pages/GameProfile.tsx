@@ -81,13 +81,13 @@ const GameProfile: React.FC = () => {
           className="game-showcase"
           style={
             {
-              '--showcase-image': `url(${game.images?.coverImages})`,
+              '--showcase-image': `url(${game.images?.coverImages || "/gamedefault.png"})`,
             } as React.CSSProperties
           }
         >
           <div className="game-showcase-content">
             <div className="game-showcase-cover">
-              <img src={game.images?.coverImages} alt={game.title} />
+              <img src={game.images?.coverImages  || "/gamedefault.png"} alt={game.title} />
             </div>
 
             <div className="game-showcase-info">
