@@ -8,11 +8,11 @@ import type { IconType } from "react-icons";
 import '../styles/GameProfile.css';
 
 // Platform lookup table
-const PLATFORM_ICONS: Record<string, IconType> = {
-  W: FaWindows,
-  L: FaLinux,
-  M: FaApple,
-  B: FaGlobe,
+const PLATFORM_ICONS: Record<number, IconType> = {
+  1: FaGlobe,
+  2: FaWindows,
+  3: FaLinux,
+  4: FaApple,
 };
 
 const GameProfile: React.FC = () => {

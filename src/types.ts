@@ -66,7 +66,7 @@ export interface GameProfileData {
   description: string;
   genreType: string;
   gameType: string;
-  platformOS: string[];
+  platformOS: number[];
   createdDtm: string;
   images: {
     coverImages: string;
