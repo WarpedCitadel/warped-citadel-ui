@@ -290,21 +290,21 @@ const Games: React.FC = () => {
         setGenre(e.target.value);
     };
 
-    const handlePlatformChange = (
-        e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        const selectedPlatforms = Array.from(
-            e.target.selectedOptions,
-            (option) => option.value
-        );
+    // const handlePlatformChange = (
+    //     e: React.ChangeEvent<HTMLSelectElement>
+    // ) => {
+    //     const selectedPlatforms = Array.from(
+    //         e.target.selectedOptions,
+    //         (option) => option.value
+    //     );
 
-        // "All Platforms" means no platform filter
-        if (selectedPlatforms.includes("")) {
-            setPlatform([]);
-        } else {
-            setPlatform(selectedPlatforms);
-        }
-    };
+    //     // "All Platforms" means no platform filter
+    //     if (selectedPlatforms.includes("")) {
+    //         setPlatform([]);
+    //     } else {
+    //         setPlatform(selectedPlatforms);
+    //     }
+    // };
 
     const handleRecentChange = (
         e: React.ChangeEvent<HTMLSelectElement>
