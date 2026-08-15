@@ -406,6 +406,175 @@
   box-shadow: 0 0 8px rgba(0, 242, 255, 0.1);
 }
 
+/* =========================
+   PLATFORM MULTI-SELECT
+   ========================= */
+
+.platform-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  color: var(--text-dim);
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.platform-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.platform-dropdown-toggle {
+  width: 100%;
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 14px;
+
+  background: var(--bg-dark);
+  border: 1px solid rgba(0, 242, 255, 0.15);
+  border-radius: 6px;
+
+  color: var(--text-main);
+
+  font-size: 1rem;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.platform-dropdown-toggle:hover,
+.platform-dropdown-toggle:focus {
+  border-color: var(--teal-dim);
+  outline: none;
+}
+
+.platform-dropdown-toggle:focus {
+  box-shadow: 0 0 8px rgba(0, 242, 255, 0.1);
+}
+
+.platform-dropdown-toggle.has-selection {
+  color: var(--text-main);
+}
+
+.platform-dropdown-arrow {
+  margin-left: 10px;
+
+  color: var(--text-dim);
+  font-size: 1rem;
+
+  transition: transform 0.2s ease;
+}
+
+.platform-dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+
+/* Dropdown */
+
+.platform-dropdown-menu {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  z-index: 20;
+
+  padding: 5px;
+
+  background: var(--bg-surface);
+
+  border: 1px solid var(--teal-dim);
+  border-radius: 6px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.45),
+    0 0 10px rgba(0, 242, 255, 0.08);
+}
+
+
+/* Individual options */
+
+.platform-option {
+  width: 100%;
+  min-height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 10px;
+
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+
+  color: var(--text-main);
+
+  font-size: 0.95rem;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.platform-option:hover {
+  background: rgba(0, 242, 255, 0.08);
+  color: white;
+}
+
+.platform-option.active {
+  color: var(--teal-glow);
+}
+
+
+/* Checkbox circles */
+
+.platform-checkbox {
+  width: 14px;
+  height: 14px;
+
+  flex-shrink: 0;
+
+  border: 1px solid var(--text-dim);
+  border-radius: 50%;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.platform-option:hover .platform-checkbox {
+  border-color: var(--teal-dim);
+}
+
+.platform-checkbox.checked {
+  border-color: var(--teal-glow);
+
+  background: var(--teal-glow);
+
+  box-shadow:
+    0 0 6px rgba(0, 242, 255, 0.5),
+    inset 0 0 0 3px var(--bg-surface);
+}
 
 /* =========================
    RESPONSIVE

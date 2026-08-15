@@ -122,6 +122,8 @@ const Games: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const [platformDropdownOpen, setPlatformDropdownOpen] = useState(false);
+
     /*
     * =========================
     * SYNC URL SEARCH
@@ -431,24 +433,92 @@ const Games: React.FC = () => {
                             </select>
                         </label>
 
-                        <label>
+                        <div className="platform-filter">
                             <span>Platform</span>
 
-                            <select
-                                multiple
-                                value={platform}
-                                onChange={handlePlatformChange}
-                            >
-                                {PLATFORMS.map((option) => (
-                                    <option
-                                        key={option.value}
-                                        value={option.value}
+                            <div className="platform-dropdown">
+                                <button
+                                type="button"
+                                className={`platform-dropdown-toggle ${
+                                    platform.length > 0 ? "has-selection" : ""
+                                }`}
+                                onClick={() => setPlatformDropdownOpen((prev) => !prev)}
+                                >
+                                <span>
+                                    {platform.length === 0
+                                    ? "All Platforms"
+                                    : platform
+                                        .map(
+                                            (value) =>
+                                            PLATFORMS.find(
+                                                (option) => option.value.toString() === value.toString()
+                                            )?.label
+                                        )
+                                        .filter(Boolean)
+                                        .join(", ")}
+                                </span>
+
+                                <span
+                                    className={`platform-dropdown-arrow ${
+                                    platformDropdownOpen ? "open" : ""
+                                    }`}
+                                >
+                                    ▾
+                                </span>
+                                </button>
+
+                                {platformDropdownOpen && (
+                                <div className="platform-dropdown-menu">
+                                    <button
+                                    type="button"
+                                    className={`platform-option ${
+                                        platform.length === 0 ? "active" : ""
+                                    }`}
+                                    onClick={() => {
+                                        setPlatform([]);
+                                        setPlatformDropdownOpen(false);
+                                    }}
                                     >
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
+                                    <span>All Platforms</span>
+                                    </button>
+
+                                    {PLATFORMS.filter((option) => option.value !== "").map(
+                                    (option) => {
+                                        const value = Number(option.value);
+                                        const selected = platform.includes(value.toString());
+
+                                        return (
+                                        <button
+                                            type="button"
+                                            key={option.value}
+                                            className={`platform-option ${
+                                            selected ? "selected" : ""
+                                            }`}
+                                            onClick={() => {
+                                                const platformValue = value.toString();
+
+                                                setPlatform((current) =>
+                                                    selected
+                                                        ? current.filter((item) => item !== platformValue)
+                                                        : [...current, platformValue]
+                                                );
+                                            }}
+                                        >
+                                            <span>{option.label}</span>
+
+                                            <span
+                                            className={`platform-checkbox ${
+                                                selected ? "checked" : ""
+                                            }`}
+                                            />
+                                        </button>
+                                        );
+                                    }
+                                    )}
+                                </div>
+                                )}
+                            </div>
+                            </div>
 
                         <label>
                             <span>Added</span>
