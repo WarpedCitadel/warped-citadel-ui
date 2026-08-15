@@ -165,7 +165,9 @@ export const getGamesPage = async (
   }
 
   if (params.platformOS !== undefined) {
-    queryParams.append("platformOS", params.platformOS.toString());
+    params.platformOS.forEach((platform) => {
+      queryParams.append("platformOS", platform.toString());
+    });
   }
 
   if (params.mostRecent !== undefined) {

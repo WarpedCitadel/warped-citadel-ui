@@ -91,7 +91,7 @@ export interface GameProfileResponse {
 export interface GamesPageParams {
   title?: string;
   genre?: number;
-  platformOS?: number;
+  platformOS?: number[];
   mostRecent?: number;
   gameType?: number;
   page?: number;

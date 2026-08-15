@@ -49,7 +49,7 @@ interface GameFilters {
     search: string;
     sort: SortOption;
     genre: string;
-    platform: string;
+    platform: string[];
     recent: string;
     gameType: string;
     pageSize: number;
@@ -79,8 +79,8 @@ const Games: React.FC = () => {
         searchParams.get("genre") || ""
     );
 
-    const [platform, setPlatform] = useState(
-        searchParams.get("platform") || ""
+    const [platform, setPlatform] = useState<string[]>(
+        searchParams.getAll("platform")
     );
 
     const [recent, setRecent] = useState(
@@ -108,7 +108,7 @@ const Games: React.FC = () => {
         search: searchParams.get("title") || "",
         sort: (searchParams.get("sort") as SortOption) || "trending",
         genre: searchParams.get("genre") || "",
-        platform: searchParams.get("platform") || "",
+        platform: searchParams.getAll("platform"),
         recent: searchParams.get("recent") || "",
         gameType: searchParams.get("type") || "",
         pageSize: Number(searchParams.get("size") || 24),
@@ -171,8 +171,8 @@ const Games: React.FC = () => {
                         ? Number(appliedFilters.genre)
                         : undefined,
 
-                    platformOS: appliedFilters.platform
-                        ? Number(appliedFilters.platform)
+                    platformOS: appliedFilters.platform.length > 0
+                        ? appliedFilters.platform.map(Number)
                         : undefined,
 
                     mostRecent: appliedFilters.recent
@@ -250,22 +250,21 @@ const Games: React.FC = () => {
          * Update URL only when the search is submitted.
          * This also means we can share/bookmark the current search.
          */
-        const params: Record<string, string> = {
-            title: search,
-            sort,
-            genre,
-            platform,
-            recent,
-            type: gameType,
-            page: "0",
-            size: pageSize.toString(),
-        };
+        const params = new URLSearchParams();
 
-        Object.keys(params).forEach((key) => {
-            if (!params[key]) {
-                delete params[key];
-            }
+        if (search) params.set("title", search);
+        if (sort) params.set("sort", sort);
+        if (genre) params.set("genre", genre);
+
+        platform.forEach((p) => {
+            params.append("platform", p);
         });
+
+        if (recent) params.set("recent", recent);
+        if (gameType) params.set("type", gameType);
+
+        params.set("page", "0");
+        params.set("size", pageSize.toString());
 
         setSearchParams(params);
     };
@@ -292,7 +291,17 @@ const Games: React.FC = () => {
     const handlePlatformChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
-        setPlatform(e.target.value);
+        const selectedPlatforms = Array.from(
+            e.target.selectedOptions,
+            (option) => option.value
+        );
+
+        // "All Platforms" means no platform filter
+        if (selectedPlatforms.includes("")) {
+            setPlatform([]);
+        } else {
+            setPlatform(selectedPlatforms);
+        }
     };
 
     const handleRecentChange = (
@@ -328,22 +337,32 @@ const Games: React.FC = () => {
 
         setPage(newPage);
 
-        const params: Record<string, string> = {
-            title: appliedFilters.search,
-            sort: appliedFilters.sort,
-            genre: appliedFilters.genre,
-            platform: appliedFilters.platform,
-            recent: appliedFilters.recent,
-            type: appliedFilters.gameType,
-            page: newPage.toString(),
-            size: appliedFilters.pageSize.toString(),
-        };
+        const params = new URLSearchParams();
 
-        Object.keys(params).forEach((key) => {
-            if (!params[key]) {
-                delete params[key];
-            }
+        if (appliedFilters.search) {
+            params.set("title", appliedFilters.search);
+        }
+
+        params.set("sort", appliedFilters.sort);
+
+        if (appliedFilters.genre) {
+            params.set("genre", appliedFilters.genre);
+        }
+
+        appliedFilters.platform.forEach((p) => {
+            params.append("platform", p);
         });
+
+        if (appliedFilters.recent) {
+            params.set("recent", appliedFilters.recent);
+        }
+
+        if (appliedFilters.gameType) {
+            params.set("type", appliedFilters.gameType);
+        }
+
+        params.set("page", newPage.toString());
+        params.set("size", appliedFilters.pageSize.toString());
 
         setSearchParams(params);
 
@@ -416,6 +435,7 @@ const Games: React.FC = () => {
                             <span>Platform</span>
 
                             <select
+                                multiple
                                 value={platform}
                                 onChange={handlePlatformChange}
                             >
