@@ -1,3 +1,8 @@
+import {
+  to = aws_s3_bucket.website-frontend-s3
+  id = "www.warpedcitadel.com"
+}
+
 resource "aws_s3_bucket" "website-frontend-s3" {
   bucket              = "www.warpedcitadel.com"
   bucket_namespace    = "global"
@@ -43,9 +48,4 @@ resource "aws_s3_bucket" "website-frontend-s3" {
   website {
     index_document = "index.html"
   }
-}
-
-import {
-  to = aws_s3_bucket.website-frontend-s3
-  id = "www.warpedcitadel.com"
 }
