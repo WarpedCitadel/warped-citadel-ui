@@ -1,226 +1,138 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import GameCard from "../components/GameCard";
 import { getGamesPage } from "../utils/api";
 import type { GameCardData } from "../types";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import GamesFilterMenu, { type GameFilters, type SortOption, } from "../components/GamesFilterMenu";
+import GamesList from "../components/GamesList";
 import "../styles/Games.css";
 
-const GENRES = [
-    { label: "All Genres", value: "" },
-    { label: "Action", value: "1" },
-    { label: "Adventure", value: "2" },
-    { label: "Platformer", value: "3" },
-    { label: "Role playing", value: "4" },
-    { label: "Survival", value: "5" },
-    { label: "Racing", value: "6" },
-    { label: "Strategy", value: "7" },
-    { label: "Puzzle", value: "8" },
-    { label: "Simulation", value: "9" },
-    { label: "Sports", value: "10" },
-];
-
-const PLATFORMS = [
-    { label: "All Platforms", value: "" },
-    { label: "Browser", value: "1" },
-    { label: "Windows", value: "2" },
-    { label: "Linux", value: "3" },
-    { label: "Mac", value: "4" },
-];
-
-const RECENT_OPTIONS = [
-    { label: "Any Time", value: "" },
-    { label: "Last 30 Days", value: "1" },
-    { label: "Last 7 Days", value: "2" },
-    { label: "Last 24 Hours", value: "3" },
-];
-
-const GAME_TYPES = [
-    { label: "All Types", value: "" },
-    { label: "Browser", value: "1" },
-    { label: "Downloadable", value: "2" },
-];
-
-const PAGE_SIZES = [12, 24, 48];
-
-type SortOption = "trending" | "newest" | "alphabetical";
-
-interface GameFilters {
-    search: string;
-    sort: SortOption;
-    genre: string;
-    platform: string[];
-    recent: string;
-    gameType: string;
-    pageSize: number;
-}
-
-interface FilterDropdownProps {
-    label: string;
-    value: string;
-    options: { value: string; label: string }[];
-    onChange: (value: string) => void;
-}
-
-const FilterDropdown = ({
-    label,
-    value,
-    options,
-    onChange,
-}: FilterDropdownProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-
-    const selectedOption = options.find(
-        (option) => option.value === value
-    );
-
-    return (
-        <div className="filter-dropdown-field">
-            <span>{label}</span>
-
-            <div className="filter-dropdown">
-                <button
-                    type="button"
-                    className="filter-dropdown-toggle"
-                    onClick={() => setIsOpen((prev) => !prev)}
-                >
-                    <span>
-                        {selectedOption?.label}
-                    </span>
-
-                    <span
-                        className={`filter-dropdown-arrow ${
-                            isOpen ? "open" : ""
-                        }`}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <polyline points="6 9 12 15 18 9" />
-                        </svg>
-                    </span>
-                </button>
-
-                {isOpen && (
-                    <div className="filter-dropdown-menu">
-                        {options.map((option) => (
-                            <button
-                                type="button"
-                                key={option.value}
-                                className={`filter-option ${
-                                    option.value === value ? "active" : ""
-                                }`}
-                                onClick={() => {
-                                    onChange(option.value);
-                                    setIsOpen(false);
-                                }}
-                            >
-                                <span>{option.label}</span>
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
 const Games: React.FC = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [
+        searchParams,
+        setSearchParams,
+    ] = useSearchParams();
 
     /*
      * =========================
      * DRAFT FILTERS
      * =========================
-     *
-     * These values change freely while the user interacts
-     * with the page. They do NOT trigger an API request.
      */
 
-    const [search, setSearch] = useState(
-        searchParams.get("title") || ""
-    );
+    const [
+        filters,
+        setFilters,
+    ] = useState<GameFilters>({
+        search:
+            searchParams.get("title") || "",
 
-    const [sort, setSort] = useState<SortOption>(
-        (searchParams.get("sort") as SortOption) || "trending"
-    );
+        sort:
+            (searchParams.get(
+                "sort"
+            ) as SortOption) || "trending",
 
-    const [genre, setGenre] = useState(
-        searchParams.get("genre") || ""
-    );
+        genre:
+            searchParams.get("genre") || "",
 
-    const [platform, setPlatform] = useState<string[]>(
-        searchParams.getAll("platform")
-    );
+        platform:
+            searchParams.getAll("platform"),
 
-    const [recent, setRecent] = useState(
-        searchParams.get("recent") || ""
-    );
+        recent:
+            searchParams.get("recent") || "",
 
-    const [gameType, setGameType] = useState(
-        searchParams.get("type") || ""
-    );
+        gameType:
+            searchParams.get("type") || "",
 
-    const [pageSize, setPageSize] = useState(
-        Number(searchParams.get("size") || 24)
-    );
+        pageSize:
+            Number(
+                searchParams.get("size") || 24
+            ),
+    });
 
     /*
      * =========================
      * APPLIED FILTERS
      * =========================
-     *
-     * These are the values actually being sent to the API.
-     * They only change when the user presses Search.
      */
 
-    const [appliedFilters, setAppliedFilters] = useState<GameFilters>({
-        search: searchParams.get("title") || "",
-        sort: (searchParams.get("sort") as SortOption) || "trending",
-        genre: searchParams.get("genre") || "",
-        platform: searchParams.getAll("platform"),
-        recent: searchParams.get("recent") || "",
-        gameType: searchParams.get("type") || "",
-        pageSize: Number(searchParams.get("size") || 24),
+    const [
+        appliedFilters,
+        setAppliedFilters,
+    ] = useState<GameFilters>({
+        search:
+            searchParams.get("title") || "",
+
+        sort:
+            (searchParams.get(
+                "sort"
+            ) as SortOption) || "trending",
+
+        genre:
+            searchParams.get("genre") || "",
+
+        platform:
+            searchParams.getAll("platform"),
+
+        recent:
+            searchParams.get("recent") || "",
+
+        gameType:
+            searchParams.get("type") || "",
+
+        pageSize:
+            Number(
+                searchParams.get("size") || 24
+            ),
     });
 
-    const [page, setPage] = useState(
-        Number(searchParams.get("page") || 0)
+    const [
+        page,
+        setPage,
+    ] = useState(
+        Number(
+            searchParams.get("page") || 0
+        )
     );
 
-    const [games, setGames] = useState<GameCardData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const [
+        games,
+        setGames,
+    ] = useState<GameCardData[]>([]);
 
-    const [platformDropdownOpen, setPlatformDropdownOpen] = useState(false);
+    const [
+        loading,
+        setLoading,
+    ] = useState(true);
+
+    const [
+        error,
+        setError,
+    ] = useState("");
 
     /*
-    * =========================
-    * SYNC URL SEARCH
-    * =========================
-    *
-    * Keeps the Games page search in sync when the
-    * navbar changes ?title= while already on /games.
-    */
+     * =========================
+     * SYNC URL SEARCH
+     * =========================
+     */
 
     useEffect(() => {
-        const urlSearch = searchParams.get("title") || "";
+        const urlSearch =
+            searchParams.get("title") || "";
 
-        if (urlSearch !== appliedFilters.search) {
-            setSearch(urlSearch);
-
-            setAppliedFilters((current) => ({
+        if (
+            urlSearch !==
+            appliedFilters.search
+        ) {
+            setFilters((current) => ({
                 ...current,
                 search: urlSearch,
             }));
+
+            setAppliedFilters(
+                (current) => ({
+                    ...current,
+                    search: urlSearch,
+                })
+            );
 
             setPage(0);
         }
@@ -230,12 +142,6 @@ const Games: React.FC = () => {
      * =========================
      * FETCH GAMES
      * =========================
-     *
-     * This only runs when:
-     * - Search is submitted
-     * - User changes page
-     *
-     * Typing/search filter changes do NOT trigger this.
      */
 
     useEffect(() => {
@@ -244,57 +150,102 @@ const Games: React.FC = () => {
             setError("");
 
             try {
-                const result = await getGamesPage({
-                    title: appliedFilters.search || undefined,
+                const result =
+                    await getGamesPage({
+                        title:
+                            appliedFilters.search ||
+                            undefined,
 
-                    genre: appliedFilters.genre
-                        ? Number(appliedFilters.genre)
-                        : undefined,
+                        genre:
+                            appliedFilters.genre
+                                ? Number(
+                                      appliedFilters.genre
+                                  )
+                                : undefined,
 
-                    platformOS: appliedFilters.platform.length > 0
-                        ? appliedFilters.platform.map(Number)
-                        : undefined,
+                        platformOS:
+                            appliedFilters.platform
+                                .length > 0
+                                ? appliedFilters.platform.map(
+                                      Number
+                                  )
+                                : undefined,
 
-                    mostRecent: appliedFilters.recent
-                        ? Number(appliedFilters.recent)
-                        : undefined,
+                        mostRecent:
+                            appliedFilters.recent
+                                ? Number(
+                                      appliedFilters.recent
+                                  )
+                                : undefined,
 
-                    gameType: appliedFilters.gameType
-                        ? Number(appliedFilters.gameType)
-                        : undefined,
+                        gameType:
+                            appliedFilters.gameType
+                                ? Number(
+                                      appliedFilters.gameType
+                                  )
+                                : undefined,
 
-                    page,
-                    size: appliedFilters.pageSize,
-                });
+                        page,
+
+                        size:
+                            appliedFilters.pageSize,
+                    });
 
                 const content =
-                    result?.data?.listGames?.content ?? [];
+                    result?.data?.listGames
+                        ?.content ?? [];
 
-                const formattedGames: GameCardData[] = content.map(
-                    (game: any) => ({
-                        gameProfileUUID: game.gameProfileUUID,
-                        title: game.title,
-                        description: game.shortDesc,
-                        image: game.coverImage,
-                        dev: "",
-                        tags: game.genre ? [game.genre] : [],
-                    })
-                );
+                const formattedGames: GameCardData[] =
+                    content.map(
+                        (game: any) => ({
+                            gameProfileUUID:
+                                game.gameProfileUUID,
+
+                            title:
+                                game.title,
+
+                            description:
+                                game.shortDesc,
+
+                            image:
+                                game.coverImage,
+
+                            dev: "",
+
+                            tags:
+                                game.genre
+                                    ? [game.genre]
+                                    : [],
+                        })
+                    );
 
                 /*
-                 * The API currently doesn't expose a sort parameter,
-                 * so alphabetical sorting is handled client-side.
+                 * API currently does not expose
+                 * sorting, so A-Z is client-side.
                  */
-                if (appliedFilters.sort === "alphabetical") {
-                    formattedGames.sort((a, b) =>
-                        a.title.localeCompare(b.title)
+
+                if (
+                    appliedFilters.sort ===
+                    "alphabetical"
+                ) {
+                    formattedGames.sort(
+                        (a, b) =>
+                            a.title.localeCompare(
+                                b.title
+                            )
                     );
                 }
 
                 setGames(formattedGames);
             } catch (err) {
-                console.error("Failed to fetch games:", err);
-                setError("Unable to load games.");
+                console.error(
+                    "Failed to fetch games:",
+                    err
+                );
+
+                setError(
+                    "Unable to load games."
+                );
             } finally {
                 setLoading(false);
             }
@@ -305,144 +256,140 @@ const Games: React.FC = () => {
 
     /*
      * =========================
-     * SEARCH / APPLY FILTERS
+     * APPLY FILTERS
      * =========================
      */
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-
-        // Apply all current selections at once
-        setAppliedFilters({
-            search,
-            sort,
-            genre,
-            platform,
-            recent,
-            gameType,
-            pageSize,
-        });
-
-        // Always return to the first page after a new search/filter
+    const handleSearch = () => {
+        setAppliedFilters(filters);
         setPage(0);
 
-        /*
-         * Update URL only when the search is submitted.
-         * This also means we can share/bookmark the current search.
-         */
-        const params = new URLSearchParams();
+        const params =
+            new URLSearchParams();
 
-        if (search) params.set("title", search);
-        if (sort) params.set("sort", sort);
-        if (genre) params.set("genre", genre);
+        if (filters.search) {
+            params.set(
+                "title",
+                filters.search
+            );
+        }
 
-        platform.forEach((p) => {
-            params.append("platform", p);
-        });
+        if (filters.sort) {
+            params.set(
+                "sort",
+                filters.sort
+            );
+        }
 
-        if (recent) params.set("recent", recent);
-        if (gameType) params.set("type", gameType);
+        if (filters.genre) {
+            params.set(
+                "genre",
+                filters.genre
+            );
+        }
+
+        filters.platform.forEach(
+            (platform) => {
+                params.append(
+                    "platform",
+                    platform
+                );
+            }
+        );
+
+        if (filters.recent) {
+            params.set(
+                "recent",
+                filters.recent
+            );
+        }
+
+        if (filters.gameType) {
+            params.set(
+                "type",
+                filters.gameType
+            );
+        }
 
         params.set("page", "0");
-        params.set("size", pageSize.toString());
+
+        params.set(
+            "size",
+            filters.pageSize.toString()
+        );
 
         setSearchParams(params);
     };
 
     /*
      * =========================
-     * FILTER CONTROLS
-     * =========================
-     *
-     * These ONLY update the draft values.
-     * No API call happens here.
-     */
-
-    const handleSortChange = (value: SortOption) => {
-        setSort(value);
-    };
-
-    const handleGenreChange = (
-        e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setGenre(e.target.value);
-    };
-
-    // const handlePlatformChange = (
-    //     e: React.ChangeEvent<HTMLSelectElement>
-    // ) => {
-    //     const selectedPlatforms = Array.from(
-    //         e.target.selectedOptions,
-    //         (option) => option.value
-    //     );
-
-    //     // "All Platforms" means no platform filter
-    //     if (selectedPlatforms.includes("")) {
-    //         setPlatform([]);
-    //     } else {
-    //         setPlatform(selectedPlatforms);
-    //     }
-    // };
-
-    const handleRecentChange = (
-        e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setRecent(e.target.value);
-    };
-
-    const handleGameTypeChange = (
-        e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setGameType(e.target.value);
-    };
-
-    const handlePageSizeChange = (
-        e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        setPageSize(Number(e.target.value));
-    };
-
-    /*
-     * =========================
      * PAGINATION
      * =========================
-     *
-     * Pagination DOES immediately request another page.
-     * This is intentional because the user explicitly asked
-     * to navigate to another page of results.
      */
 
-    const goToPage = (newPage: number) => {
-        if (newPage < 0) return;
+    const goToPage = (
+        newPage: number
+    ) => {
+        if (newPage < 0) {
+            return;
+        }
 
         setPage(newPage);
 
-        const params = new URLSearchParams();
+        const params =
+            new URLSearchParams();
 
         if (appliedFilters.search) {
-            params.set("title", appliedFilters.search);
+            params.set(
+                "title",
+                appliedFilters.search
+            );
         }
 
-        params.set("sort", appliedFilters.sort);
+        params.set(
+            "sort",
+            appliedFilters.sort
+        );
 
         if (appliedFilters.genre) {
-            params.set("genre", appliedFilters.genre);
+            params.set(
+                "genre",
+                appliedFilters.genre
+            );
         }
 
-        appliedFilters.platform.forEach((p) => {
-            params.append("platform", p);
-        });
+        appliedFilters.platform.forEach(
+            (platform) => {
+                params.append(
+                    "platform",
+                    platform
+                );
+            }
+        );
 
         if (appliedFilters.recent) {
-            params.set("recent", appliedFilters.recent);
+            params.set(
+                "recent",
+                appliedFilters.recent
+            );
         }
 
         if (appliedFilters.gameType) {
-            params.set("type", appliedFilters.gameType);
+            params.set(
+                "type",
+                appliedFilters.gameType
+            );
         }
 
-        params.set("page", newPage.toString());
-        params.set("size", appliedFilters.pageSize.toString());
+        params.set(
+            "page",
+            newPage.toString()
+        );
+
+        params.set(
+            "size",
+            appliedFilters.pageSize.toString()
+        );
 
         setSearchParams(params);
 
@@ -452,320 +399,35 @@ const Games: React.FC = () => {
         });
     };
 
-    const hasNextPage =
-        games.length === appliedFilters.pageSize;
-
     return (
         <div className="games-page">
             <main className="games-container">
 
                 <header className="games-header">
-                    <h1>Browse Games</h1>
+                    <h1>
+                        Browse Games
+                    </h1>
+
                     <p>
-                        Discover games from the Warped Citadel.
+                        Discover games from
+                        the Warped Citadel.
                     </p>
                 </header>
 
-                {/* =========================
-            FILTERS
-            ========================= */}
+                <GamesFilterMenu
+                    filters={filters}
+                    onChange={setFilters}
+                    onSearch={handleSearch}
+                />
 
-                <section className="games-filters">
-
-                    <form
-                        className="games-search"
-                        onSubmit={handleSearch}
-                    >
-                        <input
-                            type="text"
-                            placeholder="Search games..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-
-                        <button
-                            type="submit"
-                            aria-label="Search"
-                        >
-                            <FaMagnifyingGlass />
-                        </button>
-                    </form>
-
-                    <div className="filter-row">
-
-                        <FilterDropdown
-                            label="Genre"
-                            value={genre}
-                            options={GENRES}
-                            onChange={(value) =>
-                                handleGenreChange({
-                                    target: { value },
-                                } as React.ChangeEvent<HTMLSelectElement>)
-                            }
-                        />
-
-                        <div className="platform-filter">
-                            <span>Platform</span>
-
-                            <div className="platform-dropdown">
-                                <button
-                                type="button"
-                                className={`platform-dropdown-toggle ${
-                                    platform.length > 0 ? "has-selection" : ""
-                                }`}
-                                onClick={() => setPlatformDropdownOpen((prev) => !prev)}
-                                >
-                                <span>
-                                    {platform.length === 0
-                                    ? "All Platforms"
-                                    : platform
-                                        .map(
-                                            (value) =>
-                                            PLATFORMS.find(
-                                                (option) => option.value.toString() === value.toString()
-                                            )?.label
-                                        )
-                                        .filter(Boolean)
-                                        .join(", ")}
-                                </span>
-
-                                <span
-                                    className={`platform-dropdown-arrow ${
-                                    platformDropdownOpen ? "open" : ""
-                                    }`}
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <polyline points="6 9 12 15 18 9" />
-                                    </svg>
-                                </span>
-                                </button>
-
-                                {platformDropdownOpen && (
-                                <div className="platform-dropdown-menu">
-                                    <button
-                                    type="button"
-                                    className={`platform-option ${
-                                        platform.length === 0 ? "active" : ""
-                                    }`}
-                                    onClick={() => {
-                                        setPlatform([]);
-                                        setPlatformDropdownOpen(false);
-                                    }}
-                                    >
-                                    <span>All Platforms</span>
-                                    </button>
-
-                                    {PLATFORMS.filter((option) => option.value !== "").map(
-                                    (option) => {
-                                        const value = Number(option.value);
-                                        const selected = platform.includes(value.toString());
-
-                                        return (
-                                        <button
-                                            type="button"
-                                            key={option.value}
-                                            className={`platform-option ${
-                                            selected ? "selected" : ""
-                                            }`}
-                                            onClick={() => {
-                                                const platformValue = value.toString();
-
-                                                setPlatform((current) =>
-                                                    selected
-                                                        ? current.filter((item) => item !== platformValue)
-                                                        : [...current, platformValue]
-                                                );
-                                            }}
-                                        >
-                                            <span>{option.label}</span>
-
-                                            <span
-                                            className={`platform-checkbox ${
-                                                selected ? "checked" : ""
-                                            }`}
-                                            />
-                                        </button>
-                                        );
-                                    }
-                                    )}
-                                </div>
-                                )}
-                            </div>
-                            </div>
-
-                        <FilterDropdown
-                            label="Added"
-                            value={recent}
-                            options={RECENT_OPTIONS}
-                            onChange={(value) =>
-                                handleRecentChange({
-                                    target: { value },
-                                } as React.ChangeEvent<HTMLSelectElement>)
-                            }
-                        />
-
-                        <FilterDropdown
-                            label="Type"
-                            value={gameType}
-                            options={GAME_TYPES}
-                            onChange={(value) =>
-                                handleGameTypeChange({
-                                    target: { value },
-                                } as React.ChangeEvent<HTMLSelectElement>)
-                            }
-                        />
-
-                    </div>
-                </section>
-
-                {/* =========================
-            SORTING + PAGE SIZE
-            ========================= */}
-
-                <section className="games-sort">
-
-                    <div className="sort-section">
-
-                        <div className="sort-options">
-                            <span className="games-sort-label">Sort by:</span>
-
-                            <button
-                                type="button"
-                                className={
-                                    sort === "trending"
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() =>
-                                    handleSortChange("trending")
-                                }
-                            >
-                                Trending
-                            </button>
-
-                            <button
-                                type="button"
-                                className={
-                                    sort === "newest"
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() =>
-                                    handleSortChange("newest")
-                                }
-                            >
-                                Newest
-                            </button>
-
-                            <button
-                                type="button"
-                                className={
-                                    sort === "alphabetical"
-                                        ? "active"
-                                        : ""
-                                }
-                                onClick={() =>
-                                    handleSortChange("alphabetical")
-                                }
-                            >
-                                A-Z
-                            </button>
-                        </div>
-                    </div>
-
-                    <label className="games-page-size">
-                        <span>Games per page</span>
-
-                        <select
-                            value={pageSize}
-                            onChange={handlePageSizeChange}
-                        >
-                            {PAGE_SIZES.map((size) => (
-                                <option key={size} value={size}>
-                                    {size}
-                                </option>
-                            ))}
-                        </select>
-                    </label>
-
-                </section>
-
-                {/* =========================
-            RESULTS
-            ========================= */}
-
-                {loading ? (
-                    <div className="games-status">
-                        <div className="error-pill">
-                            Loading games...
-                        </div>
-                    </div>
-                ) : error ? (
-                    <div className="games-status">
-                        <div className="error-pill">
-                            {error}
-                        </div>
-                    </div>
-                ) : games.length === 0 ? (
-                    <div className="games-status">
-                        <div className="error-pill">
-                            No games found.
-                        </div>
-                    </div>
-                ) : (
-                    <section className="games-results">
-                        <div className="games-grid">
-                            {games.map((game) => (
-                                <GameCard
-                                    key={game.gameProfileUUID}
-                                    game={game}
-                                />
-                            ))}
-                        </div>
-                    </section>
-                )}
-
-                {/* =========================
-            PAGINATION
-            ========================= */}
-
-                {!loading && games.length > 0 && (
-                    <div className="games-pagination">
-
-                        <button
-                            disabled={page === 0}
-                            onClick={() =>
-                                goToPage(page - 1)
-                            }
-                        >
-                            ← Previous
-                        </button>
-
-                        <span>
-                            Page {page + 1}
-                        </span>
-
-                        <button
-                            disabled={!hasNextPage}
-                            onClick={() =>
-                                goToPage(page + 1)
-                            }
-                        >
-                            Next →
-                        </button>
-
-                    </div>
-                )}
+                <GamesList
+                    games={games}
+                    loading={loading}
+                    error={error}
+                    page={page}
+                    filters={appliedFilters}
+                    onPageChange={goToPage}
+                />
 
             </main>
         </div>
